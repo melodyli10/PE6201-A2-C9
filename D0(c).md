@@ -5,12 +5,14 @@
 
 ## D0(c) — What Good Looks Like
 
-1. Every decision must be traceable to the actual claim and insurance records, not to an unsupported assumption.
+1. Correct outcome and trigger.  
+   The run returns exactly one permitted outcome — `approve_in_principle`, `request_document`, or `escalate` — and its trigger agrees with the answer key rather than reaching the correct outcome by accident.
 
-2. The final outcome must be consistent with the routing rules and the evidence returned by the tools.
+2. Necessary work only.  
+   The agent performs all required checks, executes independent checks together where permitted, makes conditional calls only when their prerequisite is satisfied, and stops early after a decisive escalation trigger.
 
-3. The gated action must occur at most once and only after the required facts have been established.
+3. Per-case processing cost is lower than human manual handling.
 
-4. If the available records are missing or insufficient, the agent must request the missing information or escalate instead of inventing an answer.
+4. Explicitly request missing information instead of fabricating data.
 
-5. A successful automated first response should cost less than handling the same task manually.
+5. Takes the gated action at most once, and only after the facts are established.
