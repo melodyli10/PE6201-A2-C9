@@ -1,3 +1,6 @@
+# Generated at runtime by issue_decision_letter - not source, not checked in
+decisions.jsonl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
