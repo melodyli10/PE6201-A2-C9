@@ -87,6 +87,7 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
     completion_tokens_total = 0
     price_in, price_out = config.price_for(config.MODEL)
     stopped: str | None = None
+    seen_actions: set[str] = set()
 
     while True:
         if turns >= config.STEP_CAP:
@@ -115,14 +116,31 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
             arguments = json.loads(call["function"]["arguments"])
 
             if name == "issue_decision_letter":
-                # Autonomy is a policy WE set (D0: "confirm"), never something the model
-                # chooses per call - it isn't even in the tool's schema any more, but a
-                # model can still hallucinate the argument, so it's discarded here too.
-                arguments.pop("autonomy", None)
-                approve(claim_id)  # loop auto-confirms for batch evaluation runs
-                result = TOOL_FUNCTIONS[name](**arguments, autonomy="confirm", turns=turns, cost_usd=cost_usd)
+               arguments.pop("autonomy", None)
+
+            action_key = json.dumps(
+               {"name": name, "arguments": arguments},
+               sort_keys=True,
+            )
+
+            if action_key in seen_actions:
+               result = {
+                    "blocked": True,
+                    "reason": "duplicate action",
+               }
             else:
-                result = TOOL_FUNCTIONS[name](**arguments)
+               seen_actions.add(action_key)
+
+               if name == "issue_decision_letter":
+                   approve(claim_id)
+                   result = TOOL_FUNCTIONS[name](
+                       **arguments,
+                       autonomy="confirm",
+                       turns=turns,
+                       cost_usd=cost_usd,
+                  )
+               else:
+                  result = TOOL_FUNCTIONS[name](**arguments)
 
             messages.append({
                 "role": "tool",
