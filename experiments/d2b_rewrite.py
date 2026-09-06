@@ -4,6 +4,12 @@ from src.tools.get_preauthorisation import (
     get_preauthorisation,
     get_preauthorisation_v2,
 )
+
+
+def est_tokens(value):
+    return max(1, len(json.dumps(value)) // 4)
+
+
 cases = [
     {
         "name": "valid",
@@ -36,7 +42,12 @@ for case in cases:
 
     v1_result = get_preauthorisation(**case)
     v2_result = get_preauthorisation_v2(**case)
+    
+    v1_tokens = est_tokens(v1_result)
+    v2_tokens = est_tokens(v2_result)
 
     print(f"\nCASE: {name}")
     print("V1:", json.dumps(v1_result))
+    print("V1 tokens:", v1_tokens)
     print("V2:", json.dumps(v2_result))
+    print("V2 tokens:", v2_tokens)
