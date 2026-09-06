@@ -108,6 +108,7 @@ TOOL_SCHEMAS = [
                                 "code": {"type": "string"},
                                 "amount": {"type": "number"},
                             },
+                            "required": ["code", "amount"],
                         },
                     },
                 },
