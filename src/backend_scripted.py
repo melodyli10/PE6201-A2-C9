@@ -14,7 +14,7 @@ need one, parallel); final turn issues the gated decision."""
 
 import json
 import uuid
-PREAUTH_TOOL = "get_preauthorisation"
+PREAUTH_TOOL = "get_preauthorisation_v2"
 
 from src import data_store
 
