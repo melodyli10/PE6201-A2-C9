@@ -211,7 +211,7 @@ def next_turn(messages: list[dict], tools: list[dict] | None = None, parallel: b
 
     # turn 4: get_preauthorisation, only for lines that need one
     needs_preauth = [c for c in codes if coverage_by_code[c]["covered"] and coverage_by_code[c]["requires_preauth"]]
-    have_preauth = {args["procedure_code"] for args, _ in history.get(PREAUTH_TOOL, [])
+    have_preauth = {args["procedure_code"] for args, _ in history.get(PREAUTH_TOOL, [])}
     missing_preauth = [c for c in needs_preauth if c not in have_preauth]
     if missing_preauth:
         calls = [(PREAUTH_TOOL, {
@@ -220,7 +220,7 @@ def next_turn(messages: list[dict], tools: list[dict] | None = None, parallel: b
         if not parallel:
             calls = calls[:1]
         return _turn("Chase pre-authorisation for lines that require one.", calls)
-    preauth_by_code = {args["procedure_code"]: result for args, result in history.get(PREAUTH_TOOL, [])
+    preauth_by_code = {args["procedure_code"]: result for args, result in history.get(PREAUTH_TOOL, [])}
 
     evidence = _build_evidence(history)
 
