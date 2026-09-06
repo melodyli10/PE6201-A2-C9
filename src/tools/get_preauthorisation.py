@@ -7,7 +7,7 @@ from datetime import date
 
 
 def get_preauthorisation(member_id: str, procedure_code: str, date_of_service: str) -> dict:
-        try:
+    try:
         date.fromisoformat(date_of_service)
     except (TypeError, ValueError):
         return {
