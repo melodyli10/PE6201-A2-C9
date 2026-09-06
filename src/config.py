@@ -47,3 +47,4 @@ def price_for(model: str) -> tuple[float, float]:
 # Dev-time safety cap for a live run (loop.py checks this). $1 is a placeholder, not a
 # D3-evidenced number - a real step cap/budget ceiling is a separate deliverable.
 BUDGET_CEILING_USD = 1.00
+STEP_CAP = 10
