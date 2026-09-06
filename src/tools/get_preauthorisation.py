@@ -3,10 +3,17 @@ member_id + procedure_code, then the date of service must fall inside valid_from
 an authorisation that exists but expired before treatment is not a valid one."""
 
 from src import data_store
+from datetime import date
 
 
 def get_preauthorisation(member_id: str, procedure_code: str, date_of_service: str) -> dict:
-    candidates = data_store.preauthorisations_for(member_id, procedure_code)
+        try:
+        date.fromisoformat(date_of_service)
+    except (TypeError, ValueError):
+        return {
+            "error": "date_of_service must be a valid ISO date in YYYY-MM-DD format"
+        }    
+        candidates = data_store.preauthorisations_for(member_id, procedure_code)
     if not candidates:
         return {
             "found": False,
