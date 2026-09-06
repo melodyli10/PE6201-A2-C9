@@ -156,3 +156,13 @@ The decision is outside the permitted decision set, required operator confirmati
 
 **IRREVERSIBLE?**  
 Yes. This is the agent's gated write action: it appends a structured decision record to the local decision log. It must therefore be called at most once and only after the required facts and gate conditions have been established.
+
+
+# Poka-Yoke Design Changes
+
+The following two design changes move error prevention into the tool interface or code layer rather than relying on the model to follow instructions.
+
+| Before | After | What it makes impossible |
+| --- | --- | --- |
+| Each item in `lines[]` could omit `code` or `amount` in the `check_duplicate_claim` schema. | Each line item now requires both `code` and `amount`. | An incomplete line item entering duplicate-claim matching. |
+| `date_of_service` could be any string passed to `get_preauthorisation`. | The schema specifies ISO `YYYY-MM-DD`, and the tool validates the value using `date.fromisoformat()`. | A malformed or ambiguous service date silently entering the pre-authorisation validity check. |
