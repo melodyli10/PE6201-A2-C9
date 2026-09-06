@@ -87,4 +87,17 @@ def get_preauthorisation_v2(
                 "preauth_id": pa["preauth_id"],
             }
 
-    return {"status": "invalid"}
+        pa = candidates[0]
+
+    if date_of_service > pa["valid_to"]:
+        return {
+            "status": "expired",
+            "preauth_id": pa["preauth_id"],
+            "valid_to": pa["valid_to"],
+        }
+
+    return {
+        "status": "not_yet_valid",
+        "preauth_id": pa["preauth_id"],
+        "valid_from": pa["valid_from"],
+    }
