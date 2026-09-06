@@ -71,7 +71,11 @@ TOOL_SCHEMAS = [
                 "properties": {
                     "member_id": {"type": "string"},
                     "procedure_code": {"type": "string"},
-                    "date_of_service": {"type": "string"},
+                    "date_of_service": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "ISO date in YYYY-MM-DD format",
+                    },
                 },
                 "required": ["member_id", "procedure_code", "date_of_service"],
             },
