@@ -135,7 +135,7 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
                    approve(claim_id)
                    result = TOOL_FUNCTIONS[name](
                        **arguments,
-                       autonomy="confirm",
+                       autonomy=config.AUTONOMY,
                        turns=turns,
                        cost_usd=cost_usd,
                   )
