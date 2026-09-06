@@ -37,6 +37,27 @@ cases = [
     },
 ]
 
+guardrail_cases = [
+    {
+        "name": "wrong_separator",
+        "member_id": "M-2214",
+        "procedure_code": "62480",
+        "date_of_service": "2026/09/01",
+    },
+    {
+        "name": "impossible_date",
+        "member_id": "M-2214",
+        "procedure_code": "62480",
+        "date_of_service": "2026-02-30",
+    },
+    {
+        "name": "free_text_date",
+        "member_id": "M-2214",
+        "procedure_code": "62480",
+        "date_of_service": "September 1 2026",
+    },
+]
+
 for case in cases:
     name = case.pop("name")
 
@@ -51,3 +72,26 @@ for case in cases:
     print("V1 tokens:", v1_tokens)
     print("V2:", json.dumps(v2_result))
     print("V2 tokens:", v2_tokens)
+
+print("\nGUARDRAIL CASES")
+
+v1_guardrail_passed = 0
+v2_guardrail_passed = 0
+
+for case in guardrail_cases:
+    name = case["name"]
+    args = {k: v for k, v in case.items() if k != "name"}
+
+    v1_result = get_preauthorisation(**args)
+    v2_result = get_preauthorisation_v2(**args)
+
+    v1_pass = "error" in v1_result
+    v2_pass = v2_result.get("status") == "invalid_date"
+
+    v1_guardrail_passed += int(v1_pass)
+    v2_guardrail_passed += int(v2_pass)
+
+    print(f"{name}: V1={'PASS' if v1_pass else 'FAIL'}, V2={'PASS' if v2_pass else 'FAIL'}")
+
+print(f"V1 guardrail cases passed: {v1_guardrail_passed}/{len(guardrail_cases)}")
+print(f"V2 guardrail cases passed: {v2_guardrail_passed}/{len(guardrail_cases)}")
