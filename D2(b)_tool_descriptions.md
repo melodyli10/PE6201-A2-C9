@@ -205,3 +205,16 @@ The same 15-case Problem A evaluation set was run once with the V1 pre-authorisa
 | V2 | 15 / 15 | 100% |
 
 The V2 rewrite preserved the baseline decision accuracy while substantially reducing the size of the tool return.
+
+## Guardrail-case comparison
+
+Three malformed service-date guardrail cases were defined for this rewrite experiment to verify that invalid date inputs do not silently enter the pre-authorisation validity check.
+
+| Version | Guardrail cases passed |
+| --- | ---: |
+| V1 | 3 / 3 |
+| V2 | 3 / 3 |
+
+Both versions rejected all three malformed-date inputs: an incorrect separator (`2026/09/01`), an impossible date (`2026-02-30`), and a free-text date (`September 1 2026`).
+
+Overall, V2 reduced the average estimated return size from 30.25 to 10.00 tokens (approximately 66.9%) while preserving a 100% evaluation pass rate and a 3/3 guardrail pass result.
