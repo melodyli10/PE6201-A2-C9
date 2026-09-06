@@ -1,8 +1,8 @@
 import os
 import tempfile
+import importlib
 
-from src.tools import issue_decision_letter as decision_tool
-
+decision_tool = importlib.import_module("src.tools.issue_decision_letter")
 
 # Use a temporary file so this test does not write into the real decisions.jsonl.
 temp_dir = tempfile.mkdtemp()
