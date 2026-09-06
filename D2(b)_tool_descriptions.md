@@ -166,3 +166,17 @@ The following two design changes move error prevention into the tool interface o
 | --- | --- | --- |
 | Each item in `lines[]` could omit `code` or `amount` in the `check_duplicate_claim` schema. | Each line item now requires both `code` and `amount`. | An incomplete line item entering duplicate-claim matching. |
 | `date_of_service` could be any string passed to `get_preauthorisation`. | The schema specifies ISO `YYYY-MM-DD`, and the tool validates the value using `date.fromisoformat()`. | A malformed or ambiguous service date silently entering the pre-authorisation validity check. |
+
+
+# Descriptor Rewrite Experiment
+
+**Tool chosen:** `get_preauthorisation`
+
+**V1:** current instruction-heavy descriptor.
+
+**V2:** shorter descriptor with date validity enforced by the interface and code layer.
+
+**Metrics to compare:**
+- tokens returned per call
+- evaluation pass rate
+- guardrail cases passed
