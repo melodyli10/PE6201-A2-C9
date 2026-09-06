@@ -48,3 +48,5 @@ def price_for(model: str) -> tuple[float, float]:
 # D3-evidenced number - a real step cap/budget ceiling is a separate deliverable.
 BUDGET_CEILING_USD = 1.00
 STEP_CAP = 10
+# D3 autonomy setting for the irreversible decision-write action.
+AUTONOMY = "confirm"
