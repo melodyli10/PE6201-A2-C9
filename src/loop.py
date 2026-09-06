@@ -90,6 +90,9 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
 
     while True:
         turns += 1
+        if turns > config.STEP_CAP:
+           stopped = f"step cap ({config.STEP_CAP} turns) reached"
+           break
         turn = _backend_next_turn(messages, parallel=parallel)
         assistant_message = turn["message"]
         usage = turn.get("usage", {})
