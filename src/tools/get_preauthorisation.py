@@ -45,3 +45,27 @@ def get_preauthorisation(member_id: str, procedure_code: str, date_of_service: s
         "valid_to": pa["valid_to"],
         "reason": reason,
     }
+
+def get_preauthorisation_v2(
+    member_id: str,
+    procedure_code: str,
+    date_of_service: str,
+) -> dict:
+    try:
+        date.fromisoformat(date_of_service)
+    except (TypeError, ValueError):
+        return {"status": "invalid_date"}
+
+    candidates = data_store.preauthorisations_for(member_id, procedure_code)
+
+    if not candidates:
+        return {"status": "missing"}
+
+    for pa in candidates:
+        if pa["valid_from"] <= date_of_service <= pa["valid_to"]:
+            return {
+                "status": "valid",
+                "preauth_id": pa["preauth_id"],
+            }
+
+    return {"status": "invalid"}
