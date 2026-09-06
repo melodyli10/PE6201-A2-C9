@@ -180,3 +180,17 @@ The following two design changes move error prevention into the tool interface o
 - tokens returned per call
 - evaluation pass rate
 - guardrail cases passed
+
+## Token-return comparison
+
+A small four-case comparison was run against valid, expired, missing, and malformed-date inputs. Token counts were estimated using `len(json.dumps(output)) // 4`.
+
+| Case | V1 estimated tokens | V2 estimated tokens |
+| --- | ---: | ---: |
+| Valid pre-authorisation | 27 | 11 |
+| Expired pre-authorisation | 48 | 18 |
+| Missing pre-authorisation | 28 | 5 |
+| Invalid service date | 18 | 6 |
+| **Average** | **30.25** | **10.00** |
+
+The V2 output reduced estimated tokens returned per call from 30.25 to 10.00 on average, a reduction of approximately **66.9%**. The shorter output retains the decision-relevant fields needed to distinguish valid, expired, missing, and malformed-date cases.
