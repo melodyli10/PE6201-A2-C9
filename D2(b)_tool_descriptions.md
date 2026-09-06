@@ -194,3 +194,14 @@ A small four-case comparison was run against valid, expired, missing, and malfor
 | **Average** | **30.25** | **10.00** |
 
 The V2 output reduced estimated tokens returned per call from 30.25 to 10.00 on average, a reduction of approximately **66.9%**. The shorter output retains the decision-relevant fields needed to distinguish valid, expired, missing, and malformed-date cases.
+
+## Evaluation pass-rate comparison
+
+The same 15-case Problem A evaluation set was run once with the V1 pre-authorisation tool and once with the V2 tool.
+
+| Version | Cases passed | Pass rate |
+| --- | ---: | ---: |
+| V1 | 15 / 15 | 100% |
+| V2 | 15 / 15 | 100% |
+
+The V2 rewrite preserved the baseline decision accuracy while substantially reducing the size of the tool return.
