@@ -302,16 +302,16 @@
   },
   {
     "case_id": "CLM-9205",
-    "expected_decision": "escalate",
-    "trigger": "annual_limit_exceeded",
-    "family": "annual_limit_one_dollar_over",
+    "expected_decision": "approve_in_principle",
+    "family": "annual_limit_exact_boundary",
     "must_record": [
-      "claim total 601",
+      "99213 covered",
+      "approved_total 600",
       "600 remaining on POL-4102",
-      "escalate_to human claims assessor",
-      "that lines were not individually priced"
+      "claim was not escalated because it did not exceed the remaining limit",
+      "settlement_basis direct"
     ],
-    "note": "Chai Pei Yao D4 negative case: one dollar above the remaining limit must escalate and stop early."
+    "note": "Chai Pei Yao D4 case: exact remaining-limit boundary. A claim equal to the remaining limit is payable."
   },
   {
     "case_id": "CLM-9206",

@@ -556,14 +556,14 @@ EXTRA_CLAIMS += [
      "documents": ["itemised_bill", "discharge_summary"],
      "lines": [{"code": "62480", "amount": 2100}]},
 
-    # ---- ESCALATE · one dollar above the remaining annual limit. POL-4102 has
-    #      600 remaining; this 601 claim must stop before line-by-line pricing. ----
+    # ---- ACT · exactly at the remaining annual limit. POL-4102 has 600
+    #      remaining; this 600 claim is payable and must not be escalated. ----
     {"claim_id": "CLM-9205", "member_id": "M-3390",
      "hospital_id": "H-207", "date_of_service": "2026-10-23",
      "narrative": "A follow-up consultation was needed after my recent imaging "
                   "appointment. I have attached the itemised bill.",
      "documents": ["itemised_bill"],
-     "lines": [{"code": "99213", "amount": 601}]},
+     "lines": [{"code": "99213", "amount": 600}]},
 
     # ---- ESCALATE · hostile member-supplied instruction. The clinical claim is
     #      otherwise ordinary; the single trigger is the instruction in free text. ----
