@@ -508,6 +508,62 @@ EXTRA_CLAIMS += [
      "lines": [{"code": "62480", "amount": 1600}]},
 ]
 
+# ═══════════ MY 6 CASES · paste as one block ═══════════
+EXTRA_CLAIMS += [
+    # ACT · simplest approve: single line, no preauth needed, no document rule, everything present
+    {"claim_id": "CLM-9211", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-09-25",
+     "narrative": "Routine follow-up after discharge, feeling well.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "47120", "amount": 1400}]},
+
+    # ACT · both lines need pre-authorisation and both are valid — the agent must check both lines
+    {"claim_id": "CLM-9212", "member_id": "M-2214",
+     "hospital_id": "H-114", "date_of_service": "2026-09-25",
+     "narrative": "Spinal fusion and knee scope in one admission, both planned months ago.",
+     "documents": ["itemised_bill", "discharge_summary"],
+     "lines": [{"code": "62480", "amount": 1500},
+               {"code": "29881", "amount": 800}]},
+
+    # ASK · missing discharge_summary: the procedure requires it but the member only submitted the itemised bill
+    {"claim_id": "CLM-9214", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-09-05",
+     "narrative": "Knee replacement. The hospital gave me the itemised bill but not the discharge summary.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "27447", "amount": 8200}]},
+
+    # ACT · partly payable: one excluded line + one covered line — must not ask or escalate the whole claim
+    {"claim_id": "CLM-9218", "member_id": "M-2214",
+     "hospital_id": "H-114", "date_of_service": "2026-09-26",
+     "narrative": "Dermatology consultation with a skin procedure in the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "31255", "amount": 450},
+               {"code": "99213", "amount": 200}]},
+
+    # ACT · three ordinary lines, all covered, documents present — every line needs its own disposition
+    {"claim_id": "CLM-9219", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-09-27",
+     "narrative": "Follow-up consultation, a lab panel and a minor procedure during the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 150},
+               {"code": "47120", "amount": 600},
+               {"code": "45378", "amount": 300}]},
+
+    # ACT · non-panel hospital: covered, but the settlement basis must be recorded as reimbursement
+    {"claim_id": "CLM-9220", "member_id": "M-6118",
+     "hospital_id": "H-330", "date_of_service": "2026-09-28",
+     "narrative": "Outpatient consultation while travelling; paid at the clinic and requesting reimbursement.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 250}]},
+]
+
+# New preauth for CLM-9212: pre-authorisation for M-2214 line 29881
+EXTRA_PREAUTHORISATIONS += [
+    {"preauth_id": "PA-5801", "member_id": "M-2214", "procedure_code": "29881",
+     "valid_from": "2026-08-15", "valid_to": "2026-12-31"},
+]
+
+
 def write():
     os.makedirs(OUT, exist_ok=True)
     required = dict(REQUIRED_DOCS)
