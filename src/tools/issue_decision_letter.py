@@ -2,10 +2,9 @@
 return a short confirmation string. Nothing here composes a letter, a greeting or a policy
 summary - the record IS the output, and it is what gets marked.
 
-The gate check lives here, inline, because it's part of this tool's own required shape
-(the brief's own full-marks sample bakes it directly into the function) - not a separate
-guardrail layer. The step cap / budget ceiling / action-dedup that a full D3 guardrail
-layer would add are someone else's deliverable, not this file's.
+The gate lives at the write boundary. suggest never writes; confirm requires a
+trusted operator approval; act is an explicit host configuration. Unknown modes
+are rejected. Approvals are consumed after a successful write.
 
 The FAQ's minimal 5-argument sample (claim_id, decision, reason, evidence, autonomy) is the
 shape of the WRITE itself. Appendix A's own worked records carry more fields than that -
@@ -29,10 +28,13 @@ _approved_claims: set[str] = set()
 
 
 def approve(claim_id: str) -> None:
-    """Simulates the operator's confirm step. In a batch evaluation run (D4/D5) there is
-    no live human per run, so the loop performs this step right before it invokes the
-    gated action - the gate below still blocks if this was skipped."""
+    """Grant approval from trusted operator/test code, never from model text."""
     _approved_claims.add(claim_id)
+
+
+def revoke_approval(claim_id: str) -> None:
+    """Clear a one-use approval after an attempted run/write."""
+    _approved_claims.discard(claim_id)
 
 
 def _already_decided(claim_id: str) -> bool:
@@ -59,6 +61,10 @@ def issue_decision_letter(
     turns: int | None = None,
     cost_usd: float | None = None,
 ) -> str:
+    if autonomy not in {"suggest", "confirm", "act"}:
+        return f"BLOCKED: invalid autonomy {autonomy!r}"
+    if autonomy == "suggest":
+        return "BLOCKED: suggest mode does not write decisions"
     if decision not in VALID_DECISIONS:
         return f"BLOCKED: decision {decision!r} is not one of {sorted(VALID_DECISIONS)}"
     if autonomy == "confirm" and claim_id not in _approved_claims:
@@ -95,4 +101,5 @@ def issue_decision_letter(
     with open(DECISIONS_PATH, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+    revoke_approval(claim_id)
     return f"recorded: {decision} on {claim_id}"
