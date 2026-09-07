@@ -67,5 +67,20 @@
         "rule": "EX-14 cosmetic dermatology"
       }
     ]
+  },
+  {
+    "policy_id": "POL-8001",
+    "product": "Shield Select",
+    "status": "active",
+    "start_date": "2026-07-01",
+    "end_date": "2027-06-30",
+    "annual_limit": 10000,
+    "used_to_date": 2500,
+    "exclusions": [
+      {
+        "code": "70553",
+        "rule": "EX-22 advanced imaging not covered"
+      }
+    ]
   }
 ]
