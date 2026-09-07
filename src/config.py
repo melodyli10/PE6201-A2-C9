@@ -38,14 +38,15 @@ PRICE_PER_MILLION = {
 
 
 def price_for(model: str) -> tuple[float, float]:
-    """(price_in, price_out) per token, USD. Unknown model -> 0, so a free/unlisted
-    model never fabricates a cost; add real prices here before running it for D5(b)."""
-    per_million_in, per_million_out = PRICE_PER_MILLION.get(model, (0.0, 0.0))
+    """Per-token USD prices. Reject unlisted models rather than silently billing zero."""
+    if model not in PRICE_PER_MILLION:
+        raise ValueError(f"No configured token price for {model!r}; register a price before running")
+    per_million_in, per_million_out = PRICE_PER_MILLION[model]
     return per_million_in / 1_000_000, per_million_out / 1_000_000
 
 
-# Dev-time safety cap for a live run (loop.py checks this). $1 is a placeholder, not a
-# D3-evidenced number - a real step cap/budget ceiling is a separate deliverable.
+# Per-run limits. The loop checks exhaustion before the next request and overspend
+# before executing tools. A sent live request can still exceed its remaining budget.
 BUDGET_CEILING_USD = 1.00
 STEP_CAP = 10
 # D3 autonomy setting for the irreversible decision-write action.
