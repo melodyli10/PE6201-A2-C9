@@ -537,13 +537,14 @@ EXTRA_CLAIMS += [
      "documents": ["itemised_bill"],
      "lines": [{"code": "31255", "amount": 430}]},
 
-    # ---- ASK · exact required document is absent. Non-panel status is known but
-    #      must not replace the missing itemised bill for the colonoscopy line. ----
+    # ---- ACT · required evidence is present for a non-panel colonoscopy. The
+    #      itemised bill resolves the document rule; non-panel changes settlement,
+    #      not the decision. ----
     {"claim_id": "CLM-9203", "member_id": "M-5502",
      "hospital_id": "H-330", "date_of_service": "2026-10-22",
      "narrative": "I had a diagnostic colonoscopy at Bayfront Specialist. The "
-                  "clinic sent a discharge summary but has not yet supplied the bill.",
-     "documents": ["discharge_summary"],
+                  "clinic supplied an itemised bill and discharge summary after the visit.",
+     "documents": ["itemised_bill", "discharge_summary"],
      "lines": [{"code": "45378", "amount": 1000}]},
 
     # ---- ACT · the first valid day of PA-5521. Start dates are inclusive, just

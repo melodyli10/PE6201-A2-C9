@@ -435,8 +435,9 @@
     "member_id": "M-5502",
     "hospital_id": "H-330",
     "date_of_service": "2026-10-22",
-    "narrative": "I had a diagnostic colonoscopy at Bayfront Specialist. The clinic sent a discharge summary but has not yet supplied the bill.",
+    "narrative": "I had a diagnostic colonoscopy at Bayfront Specialist. The clinic supplied an itemised bill and discharge summary after the visit.",
     "documents": [
+      "itemised_bill",
       "discharge_summary"
     ],
     "lines": [

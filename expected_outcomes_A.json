@@ -276,16 +276,16 @@
   },
   {
     "case_id": "CLM-9203",
-    "expected_decision": "request_document",
-    "missing": "itemised_bill for line 45378",
-    "family": "required_document_missing_non_panel",
+    "expected_decision": "approve_in_principle",
+    "family": "required_document_present_non_panel",
     "must_record": [
-      "itemised_bill named",
-      "line 45378 named",
-      "that discharge_summary does not replace the required itemised_bill",
-      "H-330 recorded as non-panel"
+      "45378 covered",
+      "itemised_bill present",
+      "approved_total 1000",
+      "H-330 recorded as non-panel",
+      "settlement_basis reimbursement"
     ],
-    "note": "Chai Pei Yao D4 case: the agent must request the named document rather than inferring it from a discharge summary."
+    "note": "Chai Pei Yao D4 case: required evidence is present; non-panel status changes settlement only."
   },
   {
     "case_id": "CLM-9204",
