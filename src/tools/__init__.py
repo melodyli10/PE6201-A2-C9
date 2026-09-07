@@ -5,7 +5,10 @@ from src.tools.check_coverage import check_coverage
 from src.tools.check_duplicate_claim import check_duplicate_claim
 from src.tools.get_claim import get_claim
 from src.tools.get_hospital_status import get_hospital_status
-from src.tools.get_preauthorisation import get_preauthorisation
+from src.tools.get_preauthorisation import (
+    get_preauthorisation,
+    get_preauthorisation_v2,
+)
 from src.tools.issue_decision_letter import issue_decision_letter
 from src.tools.lookup_policy import lookup_policy
 
@@ -14,6 +17,7 @@ TOOL_FUNCTIONS = {
     "lookup_policy": lookup_policy,
     "check_coverage": check_coverage,
     "get_preauthorisation": get_preauthorisation,
+    "get_preauthorisation_v2": get_preauthorisation_v2,
     "get_hospital_status": get_hospital_status,
     "check_duplicate_claim": check_duplicate_claim,
     "issue_decision_letter": issue_decision_letter,
@@ -71,7 +75,34 @@ TOOL_SCHEMAS = [
                 "properties": {
                     "member_id": {"type": "string"},
                     "procedure_code": {"type": "string"},
-                    "date_of_service": {"type": "string"},
+                    "date_of_service": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "ISO date in YYYY-MM-DD format",
+                    },
+                },
+                "required": ["member_id", "procedure_code", "date_of_service"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_preauthorisation_v2",
+            "description": (
+                "Returns whether a required pre-authorisation is valid, "
+                "missing, invalid, or has an invalid service date."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "member_id": {"type": "string"},
+                    "procedure_code": {"type": "string"},
+                    "date_of_service": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "ISO date in YYYY-MM-DD format",
+                    },
                 },
                 "required": ["member_id", "procedure_code", "date_of_service"],
             },
@@ -108,6 +139,7 @@ TOOL_SCHEMAS = [
                                 "code": {"type": "string"},
                                 "amount": {"type": "number"},
                             },
+                            "required": ["code", "amount"],
                         },
                     },
                 },

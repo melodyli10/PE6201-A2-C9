@@ -14,6 +14,7 @@ need one, parallel); final turn issues the gated decision."""
 
 import json
 import uuid
+PREAUTH_TOOL = "get_preauthorisation_v2"
 
 from src import data_store
 
@@ -93,6 +94,12 @@ def _build_evidence(history: dict[str, list]) -> list[str]:
     for name, calls in history.items():
         evidence.append(name if len(calls) == 1 else f"{name} x{len(calls)}")
     return evidence
+
+
+def _preauth_is_valid(result: dict) -> bool:
+    if "valid" in result:
+        return bool(result["valid"])
+    return result.get("status") == "valid"
 
 
 def next_turn(messages: list[dict], tools: list[dict] | None = None, parallel: bool = True) -> dict:
@@ -204,23 +211,23 @@ def next_turn(messages: list[dict], tools: list[dict] | None = None, parallel: b
 
     # turn 4: get_preauthorisation, only for lines that need one
     needs_preauth = [c for c in codes if coverage_by_code[c]["covered"] and coverage_by_code[c]["requires_preauth"]]
-    have_preauth = {args["procedure_code"] for args, _ in history.get("get_preauthorisation", [])}
+    have_preauth = {args["procedure_code"] for args, _ in history.get(PREAUTH_TOOL, [])}
     missing_preauth = [c for c in needs_preauth if c not in have_preauth]
     if missing_preauth:
-        calls = [("get_preauthorisation", {
+        calls = [(PREAUTH_TOOL, {
             "member_id": member_id, "procedure_code": code, "date_of_service": date_of_service,
         }) for code in missing_preauth]
         if not parallel:
             calls = calls[:1]
         return _turn("Chase pre-authorisation for lines that require one.", calls)
-    preauth_by_code = {args["procedure_code"]: result for args, result in history.get("get_preauthorisation", [])}
+    preauth_by_code = {args["procedure_code"]: result for args, result in history.get(PREAUTH_TOOL, [])}
 
     evidence = _build_evidence(history)
 
     # request_document: an invalid/missing pre-authorisation first
     for code in needs_preauth:
         pa = preauth_by_code[code]
-        if not pa.get("valid"):
+        if not _preauth_is_valid(pa):
             return _turn(
                 "Pre-authorisation missing or expired; requesting it.",
                 [("issue_decision_letter", {
