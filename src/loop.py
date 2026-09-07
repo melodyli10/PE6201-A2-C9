@@ -6,16 +6,16 @@ in backend_scripted.py for scripted runs, and in the system prompt below for a l
 never here. That separation is what keeps this an agent (rung 7) rather than a workflow: the
 loop does not decide what happens next, the model (or its scripted stand-in) does.
 
-Only one safety check lives here: a budget-cap stop, since you're the one testing against a
-live model and asked for it explicitly. It never fires under the scripted backend (cost
-stays $0 there). Step cap, action-dedup and the rest of a full guardrail layer are D3's
-deliverable, not built here."""
+The code guardrails enforce step/budget limits, duplicate suppression and a trusted
+confirmation gate. Scripted model replies have no authority to grant approval."""
 
 import json
+import inspect
+from typing import Callable
 
 from src import backend_live, backend_scripted, config
 from src.tools import TOOL_FUNCTIONS, TOOL_SCHEMAS
-from src.tools.issue_decision_letter import approve
+from src.tools.issue_decision_letter import approve, revoke_approval
 
 SYSTEM_PROMPT = """You are the first-response agent for a health insurer's claims desk.
 
@@ -74,12 +74,20 @@ def _backend_next_turn(messages: list[dict], parallel: bool = True) -> dict:
     raise ValueError(f"unknown BACKEND {config.BACKEND!r}")
 
 
-def run_case(claim_id: str, parallel: bool = True) -> dict:
-    """Runs the loop to completion for one claim. Returns turns, cost, real token counts
-    (from the backend's own usage block - 0/0 under the scripted backend, since no real
-    call happens there), whether the dev-time budget cap stopped the run, and the full
-    message trace. `parallel` only affects the scripted backend (D2c's sequential-vs-
-    parallel comparison) - the live backend always sends whatever the model returns."""
+def run_case(
+    claim_id: str,
+    parallel: bool = True,
+    *,
+    operator_confirm: Callable[[dict], bool] | None = None,
+) -> dict:
+    """Run one claim. Confirmation is supplied only by trusted calling code.
+
+    With no approval, confirm mode returns the proposed decision without writing.
+    An optional operator_confirm callback receives the proposed arguments at the
+    write boundary. Only the boolean True grants approval; model text never does.
+    Token costs in scripted runs are normally zero. Budget enforcement stops new
+    requests at exhaustion and tools after overspend; it cannot undo a sent request.
+    """
     messages = _initial_messages(claim_id)
     turns = 0
     cost_usd = 0.0
@@ -87,8 +95,17 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
     completion_tokens_total = 0
     price_in, price_out = config.price_for(config.MODEL)
     stopped: str | None = None
+    seen_actions: set[str] = set()
+    pending_decision = None
 
     while True:
+        if turns >= config.STEP_CAP:
+            stopped = f"step cap ({config.STEP_CAP} turns) reached"
+            break
+        if cost_usd >= config.BUDGET_CEILING_USD:
+            stopped = f"budget ceiling (US${config.BUDGET_CEILING_USD:.2f}) reached"
+            break
+
         turns += 1
         turn = _backend_next_turn(messages, parallel=parallel)
         assistant_message = turn["message"]
@@ -107,31 +124,69 @@ def run_case(claim_id: str, parallel: bool = True) -> dict:
             break  # a plain final answer, no more actions
 
         for call in tool_calls:
-            name = call["function"]["name"]
-            arguments = json.loads(call["function"]["arguments"])
+            name = "unknown"
+            try:
+                name = call["function"]["name"]
+                if name not in TOOL_FUNCTIONS:
+                    raise ValueError(f"unknown tool: {name}")
+                arguments = json.loads(call["function"]["arguments"])
+                if not isinstance(arguments, dict):
+                    raise ValueError("tool arguments must be a JSON object")
+                if name == "issue_decision_letter":
+                    # These fields come from trusted runner state, never the model.
+                    for field in ("autonomy", "turns", "cost_usd"):
+                        arguments.pop(field, None)
+                    if arguments.get("claim_id") != claim_id:
+                        raise ValueError("decision claim_id does not match the current run")
+                inspect.signature(TOOL_FUNCTIONS[name]).bind(**arguments)
+                action_key = json.dumps({"name": name, "arguments": arguments}, sort_keys=True)
 
-            if name == "issue_decision_letter":
-                # Autonomy is a policy WE set (D0: "confirm"), never something the model
-                # chooses per call - it isn't even in the tool's schema any more, but a
-                # model can still hallucinate the argument, so it's discarded here too.
-                arguments.pop("autonomy", None)
-                approve(claim_id)  # loop auto-confirms for batch evaluation runs
-                result = TOOL_FUNCTIONS[name](**arguments, autonomy="confirm", turns=turns, cost_usd=cost_usd)
-            else:
-                result = TOOL_FUNCTIONS[name](**arguments)
+                if action_key in seen_actions:
+                    result = {"blocked": True, "reason": "duplicate action"}
+                else:
+                    seen_actions.add(action_key)
+                    if name == "issue_decision_letter":
+                        pending_decision = dict(arguments)
+                        try:
+                            if config.AUTONOMY == "confirm" and operator_confirm is not None:
+                                # Pass a separate object; callback edits cannot change the proposal.
+                                proposal = json.loads(json.dumps(arguments))
+                                if operator_confirm(proposal) is True:
+                                    approve(claim_id)
+                                else:
+                                    revoke_approval(claim_id)
+                            result = TOOL_FUNCTIONS[name](
+                                **arguments, autonomy=config.AUTONOMY,
+                                turns=turns, cost_usd=cost_usd,
+                            )
+                        finally:
+                            revoke_approval(claim_id)
+                        if isinstance(result, str) and result.startswith("recorded:"):
+                            pending_decision = None
+                    else:
+                        result = TOOL_FUNCTIONS[name](**arguments)
+            except (KeyError, TypeError, ValueError) as exc:
+                result = {"blocked": True, "reason": "invalid tool call",
+                          "detail": f"{type(exc).__name__}: {exc}"}
+                stopped = "invalid tool call rejected"
 
             messages.append({
                 "role": "tool",
-                "tool_call_id": call["id"],
+                "tool_call_id": call.get("id", "invalid_call"),
                 "name": name,
                 "content": json.dumps(result),
             })
+            if stopped:
+                break
 
-        if any(c["function"]["name"] == "issue_decision_letter" for c in tool_calls):
+        if stopped or pending_decision is not None or any(
+            c.get("function", {}).get("name") == "issue_decision_letter" for c in tool_calls
+        ):
             break
 
     return {
         "claim_id": claim_id,
+        "pending_decision": pending_decision,
         "turns": turns,
         "prompt_tokens": prompt_tokens_total,
         "completion_tokens": completion_tokens_total,
