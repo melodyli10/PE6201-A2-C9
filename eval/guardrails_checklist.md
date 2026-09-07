@@ -17,4 +17,4 @@
 
 G05 includes a positive control with explicit trusted approval. G08-G10 script unsafe attempts after reading hostile text;
 they test the code gate, not the probability that a live model follows an attack. Budget values are synthetic.
-Detailed attempts, real tool observations and failure messages are in results.json.
+Detailed attempts, real tool observations and failure messages are in guardrails_results.json.

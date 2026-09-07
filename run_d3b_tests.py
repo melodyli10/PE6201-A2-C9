@@ -11,7 +11,7 @@ from contextlib import ExitStack
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from src import backend_live, backend_scripted, config, data_store, loop
 
@@ -227,7 +227,7 @@ class RecordedResult(unittest.TextTestResult):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output-dir', type=Path, default=ROOT / 'eval' / 'guardrails')
+    parser.add_argument('--output-dir', type=Path, default=ROOT / 'eval')
     args = parser.parse_args()
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(GuardrailTests)
     result = unittest.TextTestRunner(verbosity=2, resultclass=RecordedResult).run(suite)
@@ -237,7 +237,7 @@ def main():
                'real_api_cost_usd': 0,
                'budget_note': 'Synthetic metering only; no API request was made.'}
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    (args.output_dir / 'results.json').write_text(
+    (args.output_dir / 'guardrails_results.json').write_text(
         json.dumps({'summary': summary, 'cases': result.rows}, indent=2, ensure_ascii=False), encoding='utf-8')
     table = ['# D3(b) Guardrail checklist', '',
              f'{passed}/{result.testsRun} PASS. Backend: scripted. Real API cost: USD 0.', '',
@@ -251,8 +251,8 @@ def main():
         table.append(f"| {row['id']} | {row['wrong_behaviour']} | {row['expected']} | {seen} | {row['status']} |")
     table += ['', 'G05 includes a positive control with explicit trusted approval. G08-G10 script unsafe attempts after reading hostile text;',
               'they test the code gate, not the probability that a live model follows an attack. Budget values are synthetic.',
-              'Detailed attempts, real tool observations and failure messages are in results.json.']
-    (args.output_dir / 'checklist.md').write_text('\n'.join(table) + '\n', encoding='utf-8')
+              'Detailed attempts, real tool observations and failure messages are in guardrails_results.json.']
+    (args.output_dir / 'guardrails_checklist.md').write_text('\n'.join(table) + '\n', encoding='utf-8')
     print(f'\nD3(b): {passed}/{result.testsRun} PASS; real API cost USD 0')
     print(f'Results: {args.output_dir.resolve()}')
     return 0 if result.wasSuccessful() else 1

@@ -1,7 +1,7 @@
 {
   "summary": {
     "backend": "scripted",
-    "python_version": "3.12.14",
+    "python_version": "3.11.3",
     "total": 10,
     "passed": 10,
     "failed": 0,
@@ -365,7 +365,7 @@
           "records_written": 1,
           "records": [
             {
-              "ts": "2026-09-07T02:03:12.856397+00:00",
+              "ts": "2026-09-07T06:48:14.258598+00:00",
               "case_id": "CLM-8850",
               "decision": "approve_in_principle",
               "reason": "Scripted guardrail test proposal",
