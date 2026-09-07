@@ -1,4 +1,11 @@
 import json
+import os
+import sys
+
+# Let this run either as `python experiments/d2b_rewrite.py` or as
+# `python -m experiments.d2b_rewrite` - both need the repo root on sys.path
+# for `from src...` to resolve.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.tools.get_preauthorisation import (
     get_preauthorisation,

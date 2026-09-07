@@ -14,6 +14,7 @@ deliverable, named after it, so it's obvious at a glance what's covered:
 | File | Deliverable |
 |---|---|
 | `D2a_tool_set.md` | D2(a) — the tool-set scoring table and reasoning |
+| `D2b_tool_descriptions.md` | D2(b) — six-field descriptor contracts, poka-yoke moves, and the `get_preauthorisation` v1→v2 rewrite measurement |
 | `D2c_dependency_rule.md` | D2(c) — the dependency rule and the sequential-vs-parallel measurement |
 
 These files are evidence, not the report. The report (Section 2, "The tool layer") argues
