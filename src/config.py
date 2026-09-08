@@ -34,6 +34,9 @@ BASE_URL = "https://openrouter.ai/api/v1"
 # Extend this table as models are added for the D5(b) live battery.
 PRICE_PER_MILLION = {
     "nvidia/nemotron-3-super-120b-a12b:free": (0.0, 0.0),
+    # OpenRouter list price checked for the D5(b) model allocation on 2026-09-07.
+    # Keep the D5(b) run metadata's price-source URL beside the final result table.
+    "mistralai/mistral-small-3.2-24b-instruct": (0.075, 0.20),
 }
 
 
