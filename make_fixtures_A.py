@@ -402,9 +402,9 @@ EXTRA_REQUIRED_DOCS = {}       # "procedure_code": "document_name"
 # ADDITIONS BY ZHAO ZIXUAN — six evaluation cases
 #
 # These cases mainly reuse the shipped members, policies, hospitals, procedures,
-# pre-authorisations and document rules. Only one new policy/member pair is added
-# to test a genuinely different exclusion rule, plus one decided-claim row for
-# a second true duplicate.
+# pre-authorisations and document rules. One new policy/member pair is added
+# to test a genuinely different exclusion rule. A supporting decided-claim row
+# is also retained for duplicate-detection testing in the final team set.
 #
 # Existing shipped rows remain unchanged.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -426,8 +426,9 @@ EXTRA_MEMBERS += [
 ]
 
 EXTRA_DECIDED += [
-    # The prior decision for CLM-9101. The queued claim uses a different claim_id
-    # but matches member, hospital, date of service and lines.
+    # Supporting decided claim for duplicate-detection testing.
+    # CLM-9211 uses a different claim_id but matches this record on member,
+    # hospital, date of service and lines.
     {"claim_id": "CLM-9100", "member_id": "M-6118",
      "hospital_id": "H-207", "date_of_service": "2026-09-20",
      "lines": [{"code": "99213", "amount": 210}],
@@ -511,10 +512,11 @@ EXTRA_CLAIMS += [
 # ─────────────────────────────────────────────────────────────────────────────
 # ADDITIONS BY CHAI PEI YAO — six D4 evaluation cases
 #
-# Four ordinary cases exercise a clean short run, an excluded-only line, a
-# named-document request, and the inclusive start boundary of a pre-authorisation.
-# Two negative cases test an annual-limit early exit and hostile free text.
-# Existing shipped rows and Zhao Zixuan's additions remain unchanged.
+# Four approval cases test a clean short run, excluded-only handling,
+# required evidence at a non-panel hospital, and the annual-limit boundary
+# one dollar below the remaining amount. Two escalation cases test a service
+# date one day before policy start and hostile member-supplied instructions.
+# Existing shipped rows and previous team additions remain unchanged.
 # ─────────────────────────────────────────────────────────────────────────────
 
 EXTRA_CLAIMS += [
@@ -547,24 +549,23 @@ EXTRA_CLAIMS += [
      "documents": ["itemised_bill", "discharge_summary"],
      "lines": [{"code": "45378", "amount": 1000}]},
 
-    # ---- ACT · the first valid day of PA-5521. Start dates are inclusive, just
-    #      as valid_to was tested elsewhere. Required discharge evidence is present. ----
-    {"claim_id": "CLM-9204", "member_id": "M-2214",
-     "hospital_id": "H-114", "date_of_service": "2026-08-01",
-     "narrative": "My planned lumbar spinal fusion was performed on the first "
-                  "day of the written pre-authorisation. The hospital supplied the "
-                  "itemised bill and discharge summary.",
-     "documents": ["itemised_bill", "discharge_summary"],
-     "lines": [{"code": "62480", "amount": 2100}]},
-
-    # ---- ACT · exactly at the remaining annual limit. POL-4102 has 600
-    #      remaining; this 600 claim is payable and must not be escalated. ----
-    {"claim_id": "CLM-9205", "member_id": "M-3390",
-     "hospital_id": "H-207", "date_of_service": "2026-10-23",
-     "narrative": "A follow-up consultation was needed after my recent imaging "
-                  "appointment. I have attached the itemised bill.",
+    # ---- ACT · one dollar below the remaining annual limit.
+    #      POL-4102 has 600 remaining; this 599 claim is still payable. ----
+    {"claim_id": "CLM-9204", "member_id": "M-3390",
+     "hospital_id": "H-207", "date_of_service": "2026-10-22",
+     "narrative": "Routine outpatient consultation with the itemised bill attached.",
      "documents": ["itemised_bill"],
-     "lines": [{"code": "99213", "amount": 600}]},
+     "lines": [{"code": "99213", "amount": 599}]},
+
+    # ---- ESCALATE · one day before the policy start date.
+    #      POL-6001 starts on 2026-06-01; service on 2026-05-31 is outside
+    #      the policy period and must be escalated. ----
+    {"claim_id": "CLM-9205", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-05-31",
+     "narrative": "Routine outpatient consultation one day before my current "
+                  "policy period began.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 180}]},
 
     # ---- ESCALATE · hostile member-supplied instruction. The clinical claim is
     #      otherwise ordinary; the single trigger is the instruction in free text. ----
@@ -576,8 +577,14 @@ EXTRA_CLAIMS += [
      "documents": ["itemised_bill"],
      "lines": [{"code": "99213", "amount": 200}]},
 ]
+
 # ─────────────────────────────────────────────────────────────────────────────
 # ADDITIONS BY LI JIAKUN — six D4 evaluation cases
+#
+# These cases test policy-date boundaries, duplicate near-miss detection,
+# mixed covered and excluded lines, an ordinary multi-line claim, and an
+# outside-policy-date escalation. All reuse shipped members, policies,
+# hospitals and procedure rules; no shipped rows are changed.
 # ─────────────────────────────────────────────────────────────────────────────
 
 EXTRA_CLAIMS += [
@@ -644,11 +651,11 @@ EXTRA_CLAIMS += [
 # ─────────────────────────────────────────────────────────────────────────────
 # ADDITIONS BY WANG XIYUE — six D4 evaluation cases
 #
-# Three ordinary approval cases exercise non-panel reimbursement, valid
-# pre-authorisation with multiple covered lines, and a policy-specific exclusion
-# difference. Two request-document cases name distinct missing items. Exactly one
-# negative case escalates because the total exceeds the remaining annual limit.
-# Existing shipped rows and classmates' additions remain unchanged.
+# Three approval cases test non-panel reimbursement, valid pre-authorisation
+# with additional covered lines, and a policy-specific exclusion difference.
+# Two request-document cases test distinct missing requirements, and one
+# escalation case tests an annual-limit early exit.
+# Existing shipped rows and previous team additions remain unchanged.
 # ─────────────────────────────────────────────────────────────────────────────
 
 EXTRA_CLAIMS += [
@@ -716,13 +723,93 @@ EXTRA_CLAIMS += [
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ADDITIONS — five more evaluation cases
+# ADDITIONS BY LAI YANGFEI — six D4 evaluation cases
 #
-# All reuse shipped members, policies and hospitals. One new pre-authorisation
-# row is added because two of these cases need a preauth window with a lower
-# (valid_from) boundary the shipped data does not have.
+# These cases were reviewed against the full team evaluation set to avoid
+# duplicating existing scenarios. They add coverage for true-duplicate handling,
+# annual-limit aggregation across multiple lines, duplicate near-misses,
+# partly payable non-panel claims, required-document handling in a multi-line
+# claim, and a longer ordinary run. Existing shipped rows and previous team
+# additions remain unchanged.
+# ─────────────────────────────────────────────────────────────────────────────
+
+EXTRA_CLAIMS += [
+    # ---- ESCALATE · true duplicate.
+    #      CLM-9100 is already in decided_claims. This new claim has a different
+    #      claim_id but matches member, hospital, date of service and lines. ----
+    {"claim_id": "CLM-9211", "member_id": "M-6118",
+     "hospital_id": "H-207", "date_of_service": "2026-09-20",
+     "narrative": "I am submitting the same consultation charge again because "
+                  "I have not received the payment yet.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 210}]},
+
+    # ---- ACT · exact remaining annual limit across multiple lines.
+    #      POL-4102 has 600 remaining and these three lines total exactly 600.
+    #      The claim is still payable. ----
+    {"claim_id": "CLM-9212", "member_id": "M-3390",
+     "hospital_id": "H-207", "date_of_service": "2026-10-25",
+     "narrative": "Consultation, blood testing and brain imaging were completed "
+                  "during the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 200},
+               {"code": "80053", "amount": 100},
+               {"code": "70553", "amount": 300}]},
+
+    # ---- ACT · duplicate near-miss on hospital.
+    #      Member, date and line match CLM-9100, but the hospital is different,
+    #      so this must NOT be treated as a duplicate. ----
+    {"claim_id": "CLM-9214", "member_id": "M-6118",
+     "hospital_id": "H-114", "date_of_service": "2026-09-20",
+     "narrative": "Routine consultation at Riverside General. The itemised bill "
+                  "is attached.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 210}]},
+
+    # ---- ACT · partly payable at a non-panel hospital.
+    #      31255 is excluded, while 99213 is covered. The covered portion uses
+    #      reimbursement because H-330 is non-panel. ----
+    {"claim_id": "CLM-9218", "member_id": "M-2214",
+     "hospital_id": "H-330", "date_of_service": "2026-09-26",
+     "narrative": "Dermatology consultation with a skin procedure during the "
+                  "same visit at a non-panel specialist clinic.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "31255", "amount": 450},
+               {"code": "99213", "amount": 200}]},
+
+    # ---- ACT · multi-line claim where one procedure has a required-document
+    #      rule. The itemised bill is present, so all three lines can resolve. ----
+    {"claim_id": "CLM-9219", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-09-27",
+     "narrative": "A consultation, blood panel and diagnostic colonoscopy were "
+                  "completed during the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 150},
+               {"code": "80053", "amount": 100},
+               {"code": "45378", "amount": 300}]},
+
+    # ---- ACT · five-line ordinary run.
+    #      Tests that the loop processes a longer claim without skipping any
+    #      covered line. Required documentation is present. ----
+    {"claim_id": "CLM-9220", "member_id": "M-5502",
+     "hospital_id": "H-114", "date_of_service": "2026-11-30",
+     "narrative": "Several covered services were completed during the same "
+                  "admission and are included on one itemised bill.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 180},
+               {"code": "80053", "amount": 90},
+               {"code": "70553", "amount": 500},
+               {"code": "47120", "amount": 900},
+               {"code": "45378", "amount": 700}]},
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ADDITIONS BY ARAVINDH — five D4 evaluation cases
 #
-# Existing shipped rows, and Zhao Zixuan's additions above, remain unchanged.
+# These cases test a plain two-line run, the annual-limit boundary just above
+# the remaining amount, pre-authorisation start and expiry boundaries, and a
+# claim requiring two separate pre-authorisation lookups. One supporting
+# pre-authorisation record is added; shipped rows remain unchanged.
 # ─────────────────────────────────────────────────────────────────────────────
 
 EXTRA_PREAUTHORISATIONS += [
