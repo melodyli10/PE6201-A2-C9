@@ -23,7 +23,10 @@ def next_turn(messages: list[dict], tools: list[dict] | None = None) -> dict:
         "model": config.MODEL,
         "messages": messages,
         "tools": tools or [],
-        "tool_choice": "auto",
+        # The loop can only execute and score structured tool actions. Requiring a
+        # tool call prevents models such as Mistral Small from replacing the final
+        # issue_decision_letter action with an unscorable prose-only answer.
+        "tool_choice": "required",
     }
     request = urllib.request.Request(
         f"{config.BASE_URL}/chat/completions",
