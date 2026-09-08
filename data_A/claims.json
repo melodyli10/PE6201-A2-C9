@@ -397,5 +397,98 @@
         "amount": 1600
       }
     ]
+  },
+  {
+    "claim_id": "CLM-9107",
+    "member_id": "M-3390",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-09-25",
+    "narrative": "Consultation and a blood panel done at the same visit.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 180
+      },
+      {
+        "code": "80053",
+        "amount": 90
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9108",
+    "member_id": "M-3390",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-09-26",
+    "narrative": "Follow-up consultation.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 601
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9109",
+    "member_id": "M-5502",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-10-01",
+    "narrative": "Knee arthroscopy performed on the first day my approval became valid.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "29881",
+        "amount": 1750
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9110",
+    "member_id": "M-6118",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-06-01",
+    "narrative": "Knee arthroscopy. I believe my approval from earlier in the year still applies.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "29881",
+        "amount": 1980
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9111",
+    "member_id": "M-5502",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-10-15",
+    "narrative": "Consultation, then a knee replacement and a separate arthroscopy on the other knee during the same admission.",
+    "documents": [
+      "itemised_bill",
+      "discharge_summary"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 180
+      },
+      {
+        "code": "27447",
+        "amount": 8300
+      },
+      {
+        "code": "29881",
+        "amount": 1900
+      }
+    ]
   }
 ]

@@ -249,5 +249,65 @@
       "escalate_to human claims assessor"
     ],
     "note": "Uses shipped PA-5521 and procedure 62480. The clinical context is legitimate, but the bracketed text attempts to replace real tool observations and issue an instruction."
+  },
+  {
+    "case_id": "CLM-9107",
+    "expected_decision": "approve_in_principle",
+    "family": "two_line_ordinary_run",
+    "must_record": [
+      "a disposition for both lines",
+      "approved_total 270",
+      "settlement_basis direct"
+    ],
+    "note": "Plain 2-line run, no preauth, no exclusion. Sits between the shipped 1-line and 4-line cases on run length."
+  },
+  {
+    "case_id": "CLM-9108",
+    "expected_decision": "escalate",
+    "trigger": "annual_limit_exceeded",
+    "family": "annual_limit_just_exceeded",
+    "must_record": [
+      "claim total 601",
+      "600 remaining on POL-4102",
+      "that the line was not individually priced"
+    ],
+    "note": "Exceeds the remaining limit by exactly $1 - the tightest possible test of > vs >=, complementing CLM-9103 which sits exactly at the limit."
+  },
+  {
+    "case_id": "CLM-9109",
+    "expected_decision": "approve_in_principle",
+    "family": "preauth_valid_from_boundary",
+    "must_record": [
+      "PA-9001 cited for line 29881",
+      "validity includes date of service 2026-10-01",
+      "approved_total 1750",
+      "settlement_basis direct"
+    ],
+    "note": "Date of service lands exactly on PA-9001's valid_from. Tests the inclusive lower boundary; CLM-9104 already covers the upper one."
+  },
+  {
+    "case_id": "CLM-9110",
+    "expected_decision": "request_document",
+    "missing": "current pre-authorisation for line 29881, valid on 2026-06-01",
+    "family": "preauth_expired_by_one_day",
+    "must_record": [
+      "PA-5640 found",
+      "its validity ended 2026-05-31",
+      "that the date of service is one day after expiry"
+    ],
+    "note": "Reuses shipped PA-5640 with the narrowest possible expiry margin - one day - sharper than CLM-8894's multi-month gap."
+  },
+  {
+    "case_id": "CLM-9111",
+    "expected_decision": "approve_in_principle",
+    "family": "two_preauth_lines_in_one_claim",
+    "must_record": [
+      "a disposition for all 3 lines",
+      "PA-5702 cited for line 27447",
+      "PA-9001 cited for line 29881",
+      "approved_total 10380",
+      "settlement_basis direct"
+    ],
+    "note": "Needs two separate get_preauthorisation lookups in the same run - no shipped or prior case exercises more than one preauth call per claim."
   }
 ]

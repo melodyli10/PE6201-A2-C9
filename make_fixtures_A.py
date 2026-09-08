@@ -508,6 +508,72 @@ EXTRA_CLAIMS += [
      "lines": [{"code": "62480", "amount": 1600}]},
 ]
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ADDITIONS — five more evaluation cases
+#
+# All reuse shipped members, policies and hospitals. One new pre-authorisation
+# row is added because two of these cases need a preauth window with a lower
+# (valid_from) boundary the shipped data does not have.
+#
+# Existing shipped rows, and Zhao Zixuan's additions above, remain unchanged.
+# ─────────────────────────────────────────────────────────────────────────────
+
+EXTRA_PREAUTHORISATIONS += [
+    # Lower boundary + second-preauth-in-one-claim cases both use this.
+    {"preauth_id": "PA-9001", "member_id": "M-5502", "procedure_code": "29881",
+     "valid_from": "2026-10-01", "valid_to": "2026-12-31"},
+]
+
+EXTRA_CLAIMS += [
+    # ---- ACT · plain 2-line run, no preauth, no exclusion. Fills the run-length
+    #      gap between the shipped 1-line and 4-line cases. ----
+    {"claim_id": "CLM-9107", "member_id": "M-3390", "hospital_id": "H-207",
+     "date_of_service": "2026-09-25",
+     "narrative": "Consultation and a blood panel done at the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 180},
+               {"code": "80053", "amount": 90}]},
+
+    # ---- ESCALATE · exceeds POL-4102's remaining limit ($600) by exactly $1.
+    #      The tightest possible test of > vs >= on the exceeded side. ----
+    {"claim_id": "CLM-9108", "member_id": "M-3390", "hospital_id": "H-207",
+     "date_of_service": "2026-09-26",
+     "narrative": "Follow-up consultation.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 601}]},
+
+    # ---- ACT · date of service lands exactly on PA-9001's valid_from. Tests the
+    #      inclusive LOWER boundary of a preauth window (shipped cases only test
+    #      the upper one). ----
+    {"claim_id": "CLM-9109", "member_id": "M-5502", "hospital_id": "H-207",
+     "date_of_service": "2026-10-01",
+     "narrative": "Knee arthroscopy performed on the first day my approval "
+                  "became valid.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "29881", "amount": 1750}]},
+
+    # ---- ASK · reuses shipped PA-5640 (valid_to 2026-05-31); date of service is
+    #      exactly one day after expiry - tightest possible expiry-boundary test. ----
+    {"claim_id": "CLM-9110", "member_id": "M-6118", "hospital_id": "H-207",
+     "date_of_service": "2026-06-01",
+     "narrative": "Knee arthroscopy. I believe my approval from earlier in the "
+                  "year still applies.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "29881", "amount": 1980}]},
+
+    # ---- ACT · 3 lines, TWO of which need separate pre-authorisation lookups
+    #      (27447 via shipped PA-5702, 29881 via new PA-9001). No shipped case
+    #      needs more than one preauth call per claim. ----
+    {"claim_id": "CLM-9111", "member_id": "M-5502", "hospital_id": "H-114",
+     "date_of_service": "2026-10-15",
+     "narrative": "Consultation, then a knee replacement and a separate "
+                  "arthroscopy on the other knee during the same admission.",
+     "documents": ["itemised_bill", "discharge_summary"],
+     "lines": [{"code": "99213", "amount": 180},
+               {"code": "27447", "amount": 8300},
+               {"code": "29881", "amount": 1900}]},
+]
+
 def write():
     os.makedirs(OUT, exist_ok=True)
     required = dict(REQUIRED_DOCS)
