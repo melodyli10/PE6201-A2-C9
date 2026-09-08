@@ -403,5 +403,86 @@
     "escalate_to human claims assessor"
   ],
   "note": "Negative case. The service date falls one day after the policy end date."
+},
+{
+  "case_id": "CLM-9401",
+  "expected_decision": "approve_in_principle",
+  "family": "non_panel_single_line_reimbursement",
+  "must_record": [
+    "99213 covered",
+    "approved_total 240",
+    "refused_total 0",
+    "H-451 recorded as non-panel",
+    "settlement_basis reimbursement"
+  ],
+  "note": "Wang Xiyue D4 case: ordinary covered consultation at a non-panel overseas hospital. Panel status changes settlement basis, not the decision."
+},
+{
+  "case_id": "CLM-9402",
+  "expected_decision": "approve_in_principle",
+  "family": "valid_preauth_with_additional_covered_lines",
+  "must_record": [
+    "a disposition for all 3 lines",
+    "PA-5702 cited for line 27447",
+    "validity includes date of service 2026-11-15",
+    "80053 covered",
+    "99213 covered",
+    "approved_total 3320",
+    "refused_total 0",
+    "settlement_basis direct"
+  ],
+  "note": "Wang Xiyue D4 case: checks that the agent only seeks pre-authorisation for the line that needs it, then records every covered line."
+},
+{
+  "case_id": "CLM-9403",
+  "expected_decision": "request_document",
+  "missing": "discharge_summary for line 27447",
+  "family": "required_discharge_summary_missing_with_valid_preauth",
+  "must_record": [
+    "PA-5702 found for line 27447",
+    "validity includes date of service 2026-11-16",
+    "discharge_summary named",
+    "line 27447 named"
+  ],
+  "note": "Wang Xiyue D4 case: a valid pre-authorisation does not replace the required discharge summary."
+},
+{
+  "case_id": "CLM-9404",
+  "expected_decision": "request_document",
+  "missing": "pre-authorisation reference for line 27447, valid on 2026-11-20",
+  "family": "preauth_absent_single_line_major_surgery",
+  "must_record": [
+    "the missing pre-authorisation named",
+    "line 27447 named",
+    "the date it must be valid on",
+    "discharge_summary present"
+  ],
+  "note": "Wang Xiyue D4 case: document evidence is present, but M-2214 has no pre-authorisation for total knee replacement."
+},
+{
+  "case_id": "CLM-9405",
+  "expected_decision": "approve_in_principle",
+  "family": "policy_specific_exclusion_not_triggered",
+  "must_record": [
+    "31255 covered under POL-4102",
+    "approved_total 550",
+    "refused_total 0",
+    "settlement_basis direct",
+    "that POL-4102 excludes 15823 but not 31255"
+  ],
+  "note": "Wang Xiyue D4 case: tests that exclusions are policy-specific rather than copied from another member's policy."
+},
+{
+  "case_id": "CLM-9406",
+  "expected_decision": "escalate",
+  "trigger": "annual_limit_exceeded",
+  "family": "annual_limit_exceeded_four_line_total",
+  "must_record": [
+    "claim total 6950",
+    "6800 remaining on POL-7220",
+    "that lines were not individually priced",
+    "escalate_to human claims assessor"
+  ],
+  "note": "Wang Xiyue D4 negative case: the claim total is above the remaining annual limit, so the run should stop at the escalation rule."
 }
 ]

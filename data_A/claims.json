@@ -607,5 +607,124 @@
         "amount": 150
       }
     ]
+  },
+  {
+    "claim_id": "CLM-9401",
+    "member_id": "M-6118",
+    "hospital_id": "H-451",
+    "date_of_service": "2026-11-02",
+    "narrative": "I had a routine outpatient review while visiting Penang and paid the clinic directly. The itemised bill is attached.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 240
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9402",
+    "member_id": "M-5502",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-11-15",
+    "narrative": "My authorised total knee replacement went ahead as planned. The same admission also included blood tests and a follow-up consultation before discharge.",
+    "documents": [
+      "itemised_bill",
+      "discharge_summary"
+    ],
+    "lines": [
+      {
+        "code": "27447",
+        "amount": 3000
+      },
+      {
+        "code": "80053",
+        "amount": 120
+      },
+      {
+        "code": "99213",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9403",
+    "member_id": "M-5502",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-11-16",
+    "narrative": "The total knee replacement was approved in advance. I have attached the itemised bill, but the discharge paperwork is still being prepared by the ward.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "27447",
+        "amount": 2800
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9404",
+    "member_id": "M-2214",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-11-20",
+    "narrative": "I underwent a planned total knee replacement and am submitting the bill and discharge summary for assessment.",
+    "documents": [
+      "itemised_bill",
+      "discharge_summary"
+    ],
+    "lines": [
+      {
+        "code": "27447",
+        "amount": 4200
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9405",
+    "member_id": "M-3390",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-11-21",
+    "narrative": "Dermabrasion treatment was performed after a minor injury. The hospital gave me an itemised bill for the visit.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "31255",
+        "amount": 550
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9406",
+    "member_id": "M-6118",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-11-22",
+    "narrative": "Appendix surgery, brain imaging, blood tests and consultation were all billed from the same admission.",
+    "documents": [
+      "itemised_bill",
+      "discharge_summary"
+    ],
+    "lines": [
+      {
+        "code": "47120",
+        "amount": 5200
+      },
+      {
+        "code": "70553",
+        "amount": 1500
+      },
+      {
+        "code": "80053",
+        "amount": 100
+      },
+      {
+        "code": "99213",
+        "amount": 150
+      }
+    ]
   }
 ]

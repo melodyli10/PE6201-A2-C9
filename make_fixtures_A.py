@@ -641,6 +641,80 @@ EXTRA_CLAIMS += [
      "lines": [{"code": "99213", "amount": 150}]},
 ]
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ADDITIONS BY WANG XIYUE — six D4 evaluation cases
+#
+# Three ordinary approval cases exercise non-panel reimbursement, valid
+# pre-authorisation with multiple covered lines, and a policy-specific exclusion
+# difference. Two request-document cases name distinct missing items. Exactly one
+# negative case escalates because the total exceeds the remaining annual limit.
+# Existing shipped rows and classmates' additions remain unchanged.
+# ─────────────────────────────────────────────────────────────────────────────
+
+EXTRA_CLAIMS += [
+    # ---- ACT · non-panel ordinary consultation. H-451 changes settlement basis
+    #      only; the covered 99213 line remains decidable under POL-7220. ----
+    {"claim_id": "CLM-9401", "member_id": "M-6118",
+     "hospital_id": "H-451", "date_of_service": "2026-11-02",
+     "narrative": "I had a routine outpatient review while visiting Penang and "
+                  "paid the clinic directly. The itemised bill is attached.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 240}]},
+
+    # ---- ACT · valid pre-authorisation plus additional covered lines. The agent
+    #      should seek pre-authorisation only for 27447, then resolve all lines. ----
+    {"claim_id": "CLM-9402", "member_id": "M-5502",
+     "hospital_id": "H-114", "date_of_service": "2026-11-15",
+     "narrative": "My authorised total knee replacement went ahead as planned. "
+                  "The same admission also included blood tests and a follow-up "
+                  "consultation before discharge.",
+     "documents": ["itemised_bill", "discharge_summary"],
+     "lines": [{"code": "27447", "amount": 3000},
+               {"code": "80053", "amount": 120},
+               {"code": "99213", "amount": 200}]},
+
+    # ---- ASK · valid pre-authorisation exists, but the required discharge
+    #      summary for 27447 is absent. The missing document must be named. ----
+    {"claim_id": "CLM-9403", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-11-16",
+     "narrative": "The total knee replacement was approved in advance. I have "
+                  "attached the itemised bill, but the discharge paperwork is "
+                  "still being prepared by the ward.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "27447", "amount": 2800}]},
+
+    # ---- ASK · pre-authorisation is needed for 27447 but M-2214 has none for
+    #      that procedure. The discharge summary is present, so the ask is narrow. ----
+    {"claim_id": "CLM-9404", "member_id": "M-2214",
+     "hospital_id": "H-114", "date_of_service": "2026-11-20",
+     "narrative": "I underwent a planned total knee replacement and am submitting "
+                  "the bill and discharge summary for assessment.",
+     "documents": ["itemised_bill", "discharge_summary"],
+     "lines": [{"code": "27447", "amount": 4200}]},
+
+    # ---- ACT · policy-specific exclusion difference. POL-4102 excludes 15823
+    #      but not 31255, so cosmetic dermabrasion is covered for this member. ----
+    {"claim_id": "CLM-9405", "member_id": "M-3390",
+     "hospital_id": "H-207", "date_of_service": "2026-11-21",
+     "narrative": "Dermabrasion treatment was performed after a minor injury. "
+                  "The hospital gave me an itemised bill for the visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "31255", "amount": 550}]},
+
+    # ---- ESCALATE · NEGATIVE CASE.
+    # POL-7220 has 6,800 remaining; this claim totals 6,950 and must stop at the
+    # annual-limit rule rather than being priced line by line. ----
+    {"claim_id": "CLM-9406", "member_id": "M-6118",
+     "hospital_id": "H-114", "date_of_service": "2026-11-22",
+     "narrative": "Appendix surgery, brain imaging, blood tests and consultation "
+                  "were all billed from the same admission.",
+     "documents": ["itemised_bill", "discharge_summary"],
+     "lines": [{"code": "47120", "amount": 5200},
+               {"code": "70553", "amount": 1500},
+               {"code": "80053", "amount": 100},
+               {"code": "99213", "amount": 150}]},
+]
+
 def write():
     os.makedirs(OUT, exist_ok=True)
     required = dict(REQUIRED_DOCS)
