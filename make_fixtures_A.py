@@ -576,6 +576,70 @@ EXTRA_CLAIMS += [
      "documents": ["itemised_bill"],
      "lines": [{"code": "99213", "amount": 200}]},
 ]
+# ─────────────────────────────────────────────────────────────────────────────
+# ADDITIONS BY LI JIAKUN — six D4 evaluation cases
+# ─────────────────────────────────────────────────────────────────────────────
+
+EXTRA_CLAIMS += [
+
+    # ---- ACT · policy start-date boundary.
+    # POL-6001 starts on 2026-06-01; service occurs on that exact date. ----
+    {"claim_id": "CLM-9301", "member_id": "M-5502",
+     "hospital_id": "H-114", "date_of_service": "2026-06-01",
+     "narrative": "Routine outpatient consultation on the first day of my "
+                  "current policy period.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 160}]},
+
+    # ---- ACT · policy end-date boundary.
+    # POL-4102 ends on 2026-12-31; service occurs on that exact date. ----
+    {"claim_id": "CLM-9302", "member_id": "M-3390",
+     "hospital_id": "H-207", "date_of_service": "2026-12-31",
+     "narrative": "Routine outpatient consultation on the final day of my "
+                  "current policy period.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 300}]},
+
+    # ---- ACT · duplicate near-miss on amount.
+    # CLM-8710 matches member, hospital, date and procedure, but its amount is
+    # 1500 rather than 1490, so this is not a duplicate. ----
+    {"claim_id": "CLM-9303", "member_id": "M-2214",
+     "hospital_id": "H-114", "date_of_service": "2026-08-20",
+     "narrative": "Submitting my appendix surgery charge from the August visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "47120", "amount": 1490}]},
+
+    # ---- ACT · one covered line and two excluded lines.
+    # Excluded lines are refused individually; the whole claim does not escalate. ----
+    {"claim_id": "CLM-9304", "member_id": "M-2214",
+     "hospital_id": "H-114", "date_of_service": "2026-09-25",
+     "narrative": "I had an outpatient consultation together with two cosmetic "
+                  "procedures during the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 180},
+               {"code": "31255", "amount": 300},
+               {"code": "15823", "amount": 700}]},
+
+    # ---- ACT · ordinary multi-line covered claim.
+    # All three lines are covered and none requires pre-authorisation. ----
+    {"claim_id": "CLM-9305", "member_id": "M-5502",
+     "hospital_id": "H-207", "date_of_service": "2026-10-26",
+     "narrative": "I attended an outpatient consultation and had routine blood "
+                  "testing and brain imaging during the same visit.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 180},
+               {"code": "80053", "amount": 90},
+               {"code": "70553", "amount": 500}]},
+
+    # ---- ESCALATE · NEGATIVE CASE.
+    # POL-4102 ended on 2026-12-31; service occurs one day later. ----
+    {"claim_id": "CLM-9306", "member_id": "M-3390",
+     "hospital_id": "H-207", "date_of_service": "2027-01-01",
+     "narrative": "Routine outpatient consultation after the end of my policy "
+                  "period.",
+     "documents": ["itemised_bill"],
+     "lines": [{"code": "99213", "amount": 150}]},
+]
 
 def write():
     os.makedirs(OUT, exist_ok=True)
