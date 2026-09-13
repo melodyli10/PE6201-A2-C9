@@ -450,34 +450,33 @@
   },
   {
     "claim_id": "CLM-9204",
-    "member_id": "M-2214",
-    "hospital_id": "H-114",
-    "date_of_service": "2026-08-01",
-    "narrative": "My planned lumbar spinal fusion was performed on the first day of the written pre-authorisation. The hospital supplied the itemised bill and discharge summary.",
-    "documents": [
-      "itemised_bill",
-      "discharge_summary"
-    ],
-    "lines": [
-      {
-        "code": "62480",
-        "amount": 2100
-      }
-    ]
-  },
-  {
-    "claim_id": "CLM-9205",
     "member_id": "M-3390",
     "hospital_id": "H-207",
-    "date_of_service": "2026-10-23",
-    "narrative": "A follow-up consultation was needed after my recent imaging appointment. I have attached the itemised bill.",
+    "date_of_service": "2026-10-22",
+    "narrative": "Routine outpatient consultation with the itemised bill attached.",
     "documents": [
       "itemised_bill"
     ],
     "lines": [
       {
         "code": "99213",
-        "amount": 600
+        "amount": 599
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9205",
+    "member_id": "M-5502",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-05-31",
+    "narrative": "Routine outpatient consultation one day before my current policy period began.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 180
       }
     ]
   },
@@ -725,6 +724,138 @@
       {
         "code": "99213",
         "amount": 150
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9211",
+    "member_id": "M-6118",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-09-20",
+    "narrative": "I am submitting the same consultation charge again because I have not received the payment yet.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 210
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9212",
+    "member_id": "M-3390",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-10-25",
+    "narrative": "Consultation, blood testing and brain imaging were completed during the same visit.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 200
+      },
+      {
+        "code": "80053",
+        "amount": 100
+      },
+      {
+        "code": "70553",
+        "amount": 300
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9214",
+    "member_id": "M-6118",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-09-20",
+    "narrative": "Routine consultation at Riverside General. The itemised bill is attached.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 210
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9218",
+    "member_id": "M-2214",
+    "hospital_id": "H-330",
+    "date_of_service": "2026-09-26",
+    "narrative": "Dermatology consultation with a skin procedure during the same visit at a non-panel specialist clinic.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "31255",
+        "amount": 450
+      },
+      {
+        "code": "99213",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9219",
+    "member_id": "M-5502",
+    "hospital_id": "H-207",
+    "date_of_service": "2026-09-27",
+    "narrative": "A consultation, blood panel and diagnostic colonoscopy were completed during the same visit.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 150
+      },
+      {
+        "code": "80053",
+        "amount": 100
+      },
+      {
+        "code": "45378",
+        "amount": 300
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-9220",
+    "member_id": "M-5502",
+    "hospital_id": "H-114",
+    "date_of_service": "2026-11-30",
+    "narrative": "Several covered services were completed during the same admission and are included on one itemised bill.",
+    "documents": [
+      "itemised_bill"
+    ],
+    "lines": [
+      {
+        "code": "99213",
+        "amount": 180
+      },
+      {
+        "code": "80053",
+        "amount": 90
+      },
+      {
+        "code": "70553",
+        "amount": 500
+      },
+      {
+        "code": "47120",
+        "amount": 900
+      },
+      {
+        "code": "45378",
+        "amount": 700
       }
     ]
   },

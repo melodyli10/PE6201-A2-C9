@@ -544,5 +544,48 @@
       "settlement_basis direct"
     ],
     "note": "Needs two separate get_preauthorisation lookups in the same run - no shipped or prior case exercises more than one preauth call per claim."
+  },
+  {
+    "case_id": "CLM-9211",
+    "expected_decision": "escalate",
+    "trigger": "duplicate_claim",
+    "family": "true_duplicate_of_decided_claim",
+    "must_record": ["CLM-9100 identified as the prior decided claim", "escalate_to human claims assessor"],
+    "note": "Lai Yangfei D4 case: member, hospital, date and line match CLM-9100 exactly."
+  },
+  {
+    "case_id": "CLM-9212",
+    "expected_decision": "approve_in_principle",
+    "family": "annual_limit_exact_boundary_multi_line",
+    "must_record": ["a disposition for all 3 lines", "approved_total 600", "600 remaining on POL-4102", "settlement_basis direct"],
+    "note": "Lai Yangfei D4 case: the three-line total equals, but does not exceed, the remaining annual limit."
+  },
+  {
+    "case_id": "CLM-9214",
+    "expected_decision": "approve_in_principle",
+    "family": "duplicate_near_miss_hospital",
+    "must_record": ["not a duplicate because hospital H-114 differs from CLM-9100", "approved_total 210", "settlement_basis direct"],
+    "note": "Lai Yangfei D4 case: same member, date and line as CLM-9100, but a different hospital."
+  },
+  {
+    "case_id": "CLM-9218",
+    "expected_decision": "approve_in_principle",
+    "family": "partly_payable_non_panel",
+    "must_record": ["31255 refused under EX-14 cosmetic dermatology", "99213 covered", "approved_total 200", "refused_total 450", "settlement_basis reimbursement"],
+    "note": "Lai Yangfei D4 case: the excluded line does not prevent approval of the covered line at a non-panel hospital."
+  },
+  {
+    "case_id": "CLM-9219",
+    "expected_decision": "approve_in_principle",
+    "family": "multi_line_required_document_present",
+    "must_record": ["a disposition for all 3 lines", "itemised_bill present for line 45378", "approved_total 550", "settlement_basis direct"],
+    "note": "Lai Yangfei D4 case: the required itemised bill is present, so all three lines resolve."
+  },
+  {
+    "case_id": "CLM-9220",
+    "expected_decision": "approve_in_principle",
+    "family": "five_line_ordinary_run",
+    "must_record": ["a disposition for all 5 lines", "itemised_bill present for line 45378", "approved_total 2370", "settlement_basis direct"],
+    "note": "Lai Yangfei D4 case: a longer ordinary claim; no covered line may be skipped."
   }
 ]
