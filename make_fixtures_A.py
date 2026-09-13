@@ -497,9 +497,9 @@ EXTRA_CLAIMS += [
                {"code": "45378", "amount": 1150}]},
 
     # ---- ACT · emergency appendicectomy with complete documentation.
-    #      M-3390 on POL-4102. Procedure 47120 requires no pre-authorisation.
+    #      M-5502 on POL-6001. Procedure 47120 requires no pre-authorisation.
     #      H-114 is panel. Straightforward urgent surgical case. ----
-    {"claim_id": "CLM-9106", "member_id": "M-3390",
+    {"claim_id": "CLM-9106", "member_id": "M-5502",
      "hospital_id": "H-114", "date_of_service": "2026-09-19",
      "narrative": "Acute appendicitis diagnosed in the emergency department. "
                   "Symptoms began with abdominal pain and fever. Laparoscopic "
