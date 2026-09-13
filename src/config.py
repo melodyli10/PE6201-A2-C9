@@ -37,6 +37,7 @@ PRICE_PER_MILLION = {
     # OpenRouter list price checked for the D5(b) model allocation on 2026-09-07.
     # Keep the D5(b) run metadata's price-source URL beside the final result table.
     "mistralai/mistral-small-3.2-24b-instruct": (0.075, 0.20),
+    "openai/gpt-4.1-mini": (0.40, 1.60),
 }
 
 
