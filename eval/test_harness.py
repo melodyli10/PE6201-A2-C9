@@ -12,8 +12,8 @@ class HarnessTests(unittest.TestCase):
         negatives = [case for case in cases
                      if labels[case["case_id"]]["expected_decision"] != "approve_in_principle"]
         self.assertEqual(len(cases), 35)
-        self.assertEqual(len(negatives), 9)
-        self.assertEqual(len(harness.trial_plan(cases, labels)), 53)
+        self.assertEqual(len(negatives), 10)
+        self.assertEqual(len(harness.trial_plan(cases, labels)), 55)
 
     def test_missing_item_is_compared_as_structured_semantics(self):
         left = "itemised bill for line 45378"
