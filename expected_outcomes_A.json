@@ -167,7 +167,7 @@
     ],
     "note": "Near a boundary is not over it. A team whose limit check uses >= will fail this one and no other."
   },
-  {
+{
     "case_id": "CLM-9101",
     "expected_decision": "approve_in_principle",
     "family": "preauth_valid_non_panel_major_surgery",
@@ -250,7 +250,7 @@
       "H-114 recorded as on-panel",
       "settlement_basis direct"
     ],
-    "note": "Emergency laparoscopic appendicectomy requiring no pre-authorisation. Uses shipped procedure that does not require preauth flag, on panel hospital, on POL-4102."
+    "note": "Emergency laparoscopic appendicectomy requiring no pre-authorisation. Uses shipped procedure that does not require preauth flag, on panel hospital, on POL-6001."
   },
   {
     "case_id": "CLM-9201",
@@ -292,28 +292,27 @@
   {
     "case_id": "CLM-9204",
     "expected_decision": "approve_in_principle",
-    "family": "preauth_valid_from_boundary",
-    "must_record": [
-      "PA-5521 cited for line 62480",
-      "validity includes date of service 2026-08-01",
-      "discharge_summary present",
-      "approved_total 2100",
-      "settlement_basis direct"
-    ],
-    "note": "Chai Pei Yao D4 case: tests the inclusive valid_from boundary, complementing the valid_to boundary case."
-  },
-  {
-    "case_id": "CLM-9205",
-    "expected_decision": "approve_in_principle",
-    "family": "annual_limit_exact_boundary",
+    "family": "annual_limit_one_below_boundary",
     "must_record": [
       "99213 covered",
-      "approved_total 600",
+      "approved_total 599",
       "600 remaining on POL-4102",
       "claim was not escalated because it did not exceed the remaining limit",
       "settlement_basis direct"
     ],
-    "note": "Chai Pei Yao D4 case: exact remaining-limit boundary. A claim equal to the remaining limit is payable."
+    "note": "Chai Pei Yao D4 case: one dollar below the remaining annual limit. A claim below the remaining limit is payable."
+  },
+  {
+    "case_id": "CLM-9205",
+    "expected_decision": "escalate",
+    "trigger": "outside_policy_dates",
+    "family": "outside_policy_dates_before_start",
+    "must_record": [
+      "date of service 2026-05-31",
+      "POL-6001 runs 2026-06-01 to 2027-05-31",
+      "escalate_to human claims assessor"
+    ],
+    "note": "Chai Pei Yao D4 negative case: the service date falls one day before the policy start date."
   },
   {
     "case_id": "CLM-9206",
@@ -484,6 +483,97 @@
       "escalate_to human claims assessor"
     ],
     "note": "Wang Xiyue D4 negative case: the claim total is above the remaining annual limit, so the run should stop at the escalation rule."
+  },
+  {
+    "case_id": "CLM-9211",
+    "expected_decision": "escalate",
+    "trigger": "duplicate_claim",
+    "family": "duplicate_of_added_decided_claim",
+    "must_record": [
+      "CLM-9100 named as the prior decision",
+      "the facts that matched: member, hospital, date of service, lines",
+      "escalate_to human claims assessor"
+    ],
+    "note": "Lai Yangfei D4 case: all duplicate-defining facts match decided claim CLM-9100."
+  },
+  {
+    "case_id": "CLM-9212",
+    "expected_decision": "approve_in_principle",
+    "family": "exact_remaining_limit_multi_line",
+    "must_record": [
+      "a disposition for all 3 lines",
+      "99213 covered",
+      "80053 covered",
+      "70553 covered",
+      "approved_total 600",
+      "refused_total 0",
+      "600 remaining on POL-4102",
+      "claim was not escalated because it did not exceed the remaining limit",
+      "settlement_basis direct"
+    ],
+    "note": "Lai Yangfei D4 case: the three lines total exactly the remaining annual limit and are payable."
+  },
+  {
+    "case_id": "CLM-9214",
+    "expected_decision": "approve_in_principle",
+    "family": "duplicate_near_miss_hospital",
+    "must_record": [
+      "99213 covered",
+      "approved_total 210",
+      "refused_total 0",
+      "NOT a duplicate: CLM-9100 has hospital H-207 while this claim has H-114",
+      "settlement_basis direct"
+    ],
+    "note": "Lai Yangfei D4 case: the hospital mismatch means this is not a duplicate."
+  },
+  {
+    "case_id": "CLM-9218",
+    "expected_decision": "approve_in_principle",
+    "family": "partly_payable_non_panel",
+    "must_record": [
+      "a disposition for both lines",
+      "31255 refused under EX-14 cosmetic dermatology",
+      "99213 covered",
+      "approved_total 200",
+      "refused_total 450",
+      "H-330 recorded as non-panel",
+      "settlement_basis reimbursement"
+    ],
+    "note": "Lai Yangfei D4 case: the excluded line is refused while the covered part remains payable by reimbursement."
+  },
+  {
+    "case_id": "CLM-9219",
+    "expected_decision": "approve_in_principle",
+    "family": "required_document_present_multi_line",
+    "must_record": [
+      "a disposition for all 3 lines",
+      "99213 covered",
+      "80053 covered",
+      "45378 covered",
+      "itemised_bill present",
+      "approved_total 550",
+      "refused_total 0",
+      "settlement_basis direct"
+    ],
+    "note": "Lai Yangfei D4 case: the itemised bill satisfies the required-document rule for line 45378."
+  },
+  {
+    "case_id": "CLM-9220",
+    "expected_decision": "approve_in_principle",
+    "family": "five_line_long_run",
+    "must_record": [
+      "a disposition for all 5 lines",
+      "99213 covered",
+      "80053 covered",
+      "70553 covered",
+      "47120 covered",
+      "45378 covered",
+      "itemised_bill present",
+      "approved_total 2370",
+      "refused_total 0",
+      "settlement_basis direct"
+    ],
+    "note": "Lai Yangfei D4 case: all five lines are covered and the required documentation is present."
   },
   {
     "case_id": "CLM-9107",
