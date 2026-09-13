@@ -153,12 +153,31 @@ def load_suite(name: str) -> tuple[str, list[dict], dict[str, dict]]:
     return suite_id, cases, labels
 
 
-def trial_plan(cases: list[dict], labels: dict[str, dict]) -> list[tuple[dict, int]]:
+def trial_plan(
+    cases: list[dict],
+    labels: dict[str, dict],
+    mode: str,
+) -> list[tuple[dict, int]]:
     plan = []
+
     for case in cases:
-        is_negative = labels[case["case_id"]]["expected_decision"] != "approve_in_principle"
-        for trial in range(1, 4 if is_negative else 2):
+        is_negative = (
+            labels[case["case_id"]]["expected_decision"]
+            != "approve_in_principle"
+        )
+
+        if mode == "d4":
+            # D4: several trials per case; use 3 for every case.
+            trial_count = 3
+        elif mode == "battery":
+            # D5: full set once, plus 3 EXTRA trials on negative cases.
+            trial_count = 4 if is_negative else 1
+        else:
+            raise ValueError(f"unknown trial mode: {mode!r}")
+
+        for trial in range(1, trial_count + 1):
             plan.append((case, trial))
+
     return plan
 
 
@@ -232,7 +251,7 @@ def compressed_evidence(calls: list[dict]) -> list[str]:
 def canonical_missing(value: Any) -> dict[str, str | None]:
     """Compare the named item semantically, without fragile substring scoring."""
     text = re.sub(r"\s+", " ", str(value or "").replace("_", " ").strip().lower())
-    line = re.search(r"(?:line|for)\s+(\d{5})", text)
+    line = re.search(r"(?:line|for|procedure(?: code)?)\s+(\d{5})", text)
     valid_on = re.search(r"\d{4}-\d{2}-\d{2}", text)
     if "pre-authorisation" in text or "preauthorisation" in text:
         item = "pre-authorisation"
@@ -279,10 +298,42 @@ def expected_approval(case_id: str, fixtures: dict[str, dict]) -> dict:
 
 def normalise_lines(lines: Any) -> list[dict]:
     result = []
+
+    status_aliases = {
+        "covered": "covered",
+        "approved": "covered",
+        "approved with valid preauth": "covered",
+        "approved with valid pre-authorisation": "covered",
+        "approved with valid preauthorization": "covered",
+        "not covered": "not_covered",
+        "excluded": "not_covered",
+        "refused": "not_covered",
+    }
+
     for line in lines or []:
-        result.append({key: line.get(key) for key in ("code", "amount", "status", "exclusion")
-                       if line.get(key) is not None})
-    return sorted(result, key=lambda row: (str(row.get("code")), float(row.get("amount", 0))))
+        row = {
+            key: line.get(key)
+            for key in ("code", "amount", "status", "exclusion")
+            if line.get(key) is not None
+        }
+
+        if isinstance(row.get("status"), str):
+            status_key = re.sub(
+                r"[\s_-]+",
+                " ",
+                row["status"].strip().lower(),
+            )
+            row["status"] = status_aliases.get(status_key, row["status"])
+
+        result.append(row)
+
+    return sorted(
+        result,
+        key=lambda row: (
+            str(row.get("code")),
+            float(row.get("amount", 0)),
+        ),
+    )
 
 
 def score_record(case_id: str, expected: dict, actual: dict | None,
@@ -373,7 +424,7 @@ def safe_name(value: str) -> str:
 
 def run(args: argparse.Namespace) -> Path:
     suite_id, cases, labels = load_suite(args.suite)
-    plan = trial_plan(cases, labels)
+    plan = trial_plan(cases, labels, args.trial_mode)
     negatives = sum(labels[row["case_id"]]["expected_decision"] != "approve_in_principle"
                     for row in cases)
     print(f"Suite: {suite_id}; cases={len(cases)}, negatives={negatives}, trials={len(plan)}")
@@ -482,6 +533,12 @@ def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
     result.add_argument("--suite", choices=("d4", "shipped"), default="d4")
     result.add_argument("--backend", choices=("scripted", "live"), default="scripted")
+    result.add_argument(
+    "--trial-mode",
+    choices=("d4", "battery"),
+    default="battery",
+    help="d4 = 3 trials per case; battery = full set once plus 3 extra negative trials",
+)
     result.add_argument("--model", help="Model id; register its price in src/config.py")
     result.add_argument("--prompt-version", default="v2-final")
     result.add_argument("--output-dir", default=str(EVAL_DIR / "results"))
