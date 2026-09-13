@@ -38,3 +38,62 @@ The scripted backend is deterministic and runs without an API key or network acc
 
 ```bash
 python3 -m unittest eval.test_harness
+```
+
+Check the D4 trial count:
+
+```bash
+python3 -m eval.harness \
+  --suite d4 \
+  --backend scripted \
+  --trial-mode d4 \
+  --dry-run
+```
+
+Check the D5 battery trial count:
+
+```bash
+python3 -m eval.harness \
+  --suite d4 \
+  --backend scripted \
+  --trial-mode battery \
+  --dry-run
+```
+
+## Run the D4 scripted evaluation
+
+```bash
+python3 -m eval.harness \
+  --suite d4 \
+  --backend scripted \
+  --trial-mode d4
+```
+
+Expected trial count: 105
+
+## Run a D5 live-model battery
+
+Before running live, make sure the model and its token price are registered in `src/config.py`.
+
+```bash
+python3 -m eval.harness \
+  --suite d4 \
+  --backend live \
+  --trial-mode battery \
+  --model <MODEL_ID> \
+  --prompt-version v2-final \
+  --allow-live
+```
+
+Expected trial count per live model: 65
+
+## Grading
+
+The harness uses mixed grading:
+
+- Code checks for deterministic requirements such as outcome, trigger, tool behaviour and gated action.
+- Judgement checks for selected cases where reason and evidence quality require review.
+
+Earlier 55-trial runs are preserved as diagnostic history only.
+
+Final D4 and D5 evidence should use the current 105-trial D4 plan and 65-trial live-model battery.
