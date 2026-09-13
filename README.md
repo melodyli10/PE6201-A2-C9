@@ -9,46 +9,32 @@ The final D4 evaluation set contains:
 - 35 team-written evaluation cases
 - 25 ordinary cases
 - 10 negative cases
-- 55 total trials
 
-Ordinary cases run once. Negative cases run three times.
+### D4 trial plan
 
-## Run the scripted backend
+For D4, every case is run three times:
+
+- 35 cases × 3 trials
+- 105 total trials
+
+### D5 live-model battery
+
+For D5(b), each live model runs:
+
+- the full 35-case evaluation set once
+- plus 3 extra trials for each of the 10 negative cases
+
+This gives:
+
+- 35 baseline trials
+- 30 extra negative-case trials
+- 65 total trials per live model
+
+Every trial uses a private decision ledger, so no trial depends on another.
+
+## Run the checks
 
 The scripted backend is deterministic and runs without an API key or network access.
 
 ```bash
 python3 -m unittest eval.test_harness
-python3 -m eval.harness --suite d4 --backend scripted
-```
-
-## Grading
-
-The harness uses mixed grading:
-
-- Code checks for deterministic requirements such as outcome, trigger, tool behaviour and gated action.
-- Judgement checks for selected cases where reason and evidence quality require review.
-
-Final judgement outputs are stored in:
-
-```text
-eval/final_judgements.jsonl
-```
-
-## Final scripted evaluation
-
-Final evidence is stored in:
-
-```text
-eval/results/d4_scripted_final/
-```
-
-Final scripted result:
-
-- 55/55 trials passed
-- 25/25 ordinary trials passed
-- 30/30 negative trials passed
-- Final pass rate: 100%
-- Judgement pending: 0
-- Average turns: 3.927
-- Total scripted cost: USD 0.00

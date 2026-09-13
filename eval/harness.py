@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""D4 outcome-evaluation harness for Problem A.
+"""D4/D5 outcome-evaluation harness for Problem A.
 
-Default (deterministic, offline and free):
-    python -m eval.harness --suite d4 --backend scripted
+D4 scripted evaluation:
+    python -m eval.harness --suite d4 --backend scripted --trial-mode d4
 
-Ordinary cases run once; negative cases (ASK or ESCALATE) run three times.
+D5 live-model battery:
+    python -m eval.harness --suite d4 --backend live --trial-mode battery ...
+
+D4 mode runs every case three times.
+Battery mode runs the full evaluation set once, plus three extra trials
+for each negative case.
+
 Every trial uses a private decision ledger, so no trial depends on another.
 """
 

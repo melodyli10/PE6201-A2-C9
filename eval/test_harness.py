@@ -7,13 +7,28 @@ from src import backend_scripted, config, loop
 
 
 class HarnessTests(unittest.TestCase):
+
     def test_d4_shape_and_trial_arithmetic(self):
         _, cases, labels = harness.load_suite("d4")
-        negatives = [case for case in cases
-                     if labels[case["case_id"]]["expected_decision"] != "approve_in_principle"]
+        negatives = [
+            case for case in cases
+            if labels[case["case_id"]]["expected_decision"] != "approve_in_principle"
+        ]
+
         self.assertEqual(len(cases), 35)
         self.assertEqual(len(negatives), 10)
-        self.assertEqual(len(harness.trial_plan(cases, labels)), 55)
+
+        # D4: 35 cases x 3 trials = 105.
+        self.assertEqual(
+            len(harness.trial_plan(cases, labels, "d4")),
+            105,
+        )
+
+        # D5 battery: 35 baseline + 3 extra trials for 10 negatives = 65.
+        self.assertEqual(
+            len(harness.trial_plan(cases, labels, "battery")),
+            65,
+        )
 
     def test_missing_item_is_compared_as_structured_semantics(self):
         left = "itemised bill for line 45378"
