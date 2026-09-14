@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "run_id": "20260914T070612Z_live_openai-gpt-4.1-mini",
+    "suite_id": "d4-team-v1",
+    "backend": "live",
+    "model_id": "openai/gpt-4.1-mini",
+    "configured_model": "openai/gpt-4.1-mini",
+    "prompt_version": "v2-final",
+    "run_date_utc": "2026-09-14T07:06:12.063380+00:00",
+    "git_commit": "ba145f25512b753d0c7bc8210a7d6a23adaeef36",
+    "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
+    "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
+    "judge_prompt": "eval/judge_prompt.md",
+    "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
+    "trial_count": 65
+  },
+  "cases": 35,
+  "negative_cases": 10,
+  "overall": {
+    "trials": 65,
+    "code_passed": 23,
+    "code_pass_rate": 0.3538,
+    "final_graded": 46,
+    "final_passed": 21,
+    "graded_only_pass_rate": 0.4565,
+    "final_pass_rate": null,
+    "judgement_pending": 19
+  },
+  "ordinary": {
+    "trials": 25,
+    "code_passed": 23,
+    "code_pass_rate": 0.92,
+    "final_graded": 22,
+    "final_passed": 21,
+    "graded_only_pass_rate": 0.9545,
+    "final_pass_rate": null,
+    "judgement_pending": 3
+  },
+  "negative": {
+    "trials": 40,
+    "code_passed": 0,
+    "code_pass_rate": 0.0,
+    "final_graded": 24,
+    "final_passed": 0,
+    "graded_only_pass_rate": 0.0,
+    "final_pass_rate": null,
+    "judgement_pending": 16
+  },
+  "average_turns": 4.062,
+  "total_prompt_tokens": 422620,
+  "total_completion_tokens": 22355,
+  "total_cost_usd": 0.204819
+}
