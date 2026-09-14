@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "run_id": "20260914T154843Z_live_google-gemini-2.5-pro",
+    "suite_id": "d4-team-v1",
+    "backend": "live",
+    "model_id": "google/gemini-2.5-pro",
+    "configured_model": "google/gemini-2.5-pro",
+    "prompt_version": "v2-final",
+    "run_date_utc": "2026-09-14T15:48:43.722428+00:00",
+    "git_commit": "2a07d6e1a70b5b1d1dd2cb6c0853577e98ee79a9",
+    "dataset_sha256": "0aca973b29d987a1200d1fc131c02455738eb02494be85ea0036fe8b94fa7abe",
+    "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
+    "judge_prompt": "eval/judge_prompt.md",
+    "judge_prompt_sha256": "0ae38fa1e27c40b03201d8bbdebf15e3ff389389db61f942d5bd35a821b0991d",
+    "trial_count": 65,
+    "judgements_applied_utc": "2026-09-14T16:22:15.719955+00:00"
+  },
+  "cases": 35,
+  "negative_cases": 10,
+  "overall": {
+    "trials": 65,
+    "code_passed": 8,
+    "code_pass_rate": 0.1231,
+    "final_graded": 65,
+    "final_passed": 8,
+    "graded_only_pass_rate": 0.1231,
+    "final_pass_rate": 0.1231,
+    "judgement_pending": 0
+  },
+  "ordinary": {
+    "trials": 25,
+    "code_passed": 8,
+    "code_pass_rate": 0.32,
+    "final_graded": 25,
+    "final_passed": 8,
+    "graded_only_pass_rate": 0.32,
+    "final_pass_rate": 0.32,
+    "judgement_pending": 0
+  },
+  "negative": {
+    "trials": 40,
+    "code_passed": 0,
+    "code_pass_rate": 0.0,
+    "final_graded": 40,
+    "final_passed": 0,
+    "graded_only_pass_rate": 0.0,
+    "final_pass_rate": 0.0,
+    "judgement_pending": 0
+  },
+  "average_turns": 3.708,
+  "total_prompt_tokens": 366224,
+  "total_completion_tokens": 156372,
+  "total_cost_usd": 2.021511
+}
