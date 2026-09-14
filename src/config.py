@@ -38,6 +38,9 @@ PRICE_PER_MILLION = {
     # Keep the D5(b) run metadata's price-source URL beside the final result table.
     "mistralai/mistral-small-3.2-24b-instruct": (0.075, 0.20),
     "openai/gpt-4.1-mini": (0.40, 1.60),
+    # OpenRouter standard list price checked on 2026-09-14:
+    # https://openrouter.ai/google/gemini-2.5-pro
+    "google/gemini-2.5-pro": (1.25, 10.00),
 }
 
 
