@@ -91,7 +91,9 @@ Expected trial count per live model: 65
 
 The harness uses mixed grading:
 
-- Code checks for deterministic requirements such as outcome, trigger, tool behaviour and gated action.
+- The primary D4/D5 pass rate is outcome-graded: the decision must match the answer key, a document request must name the exact missing item, and an escalation must use the correct trigger.
+- Required-record completeness is reported separately for the decision-specific structured fields.
+- Strict diagnostics report tool evidence, gated-action and loop behaviour without redefining the outcome pass rate.
 - Judgement checks for selected cases where reason and evidence quality require review.
 
 Earlier 55-trial runs are preserved as diagnostic history only.

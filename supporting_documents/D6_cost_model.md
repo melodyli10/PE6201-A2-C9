@@ -49,6 +49,66 @@ monthly_cost = cost_per_task × 8,000 + monthly_fixed_cost
 it differs materially from calculated L1, report both and use the documented
 official list-price calculation in the cross-model comparison.
 
+## Measured result — Chai Peiyao / Mistral Small 3.2 24B
+
+Source run: `eval/results/20260914T023002Z_live_mistralai-mistral-small-3.2-24b-instruct/`.
+The run used commit `ba145f25512b753d0c7bc8210a7d6a23adaeef36`, the locked
+`v2-final` prompt, 35 cases and 65 trials. OpenRouter's model page lists USD
+0.075 per million input tokens and USD 0.20 per million output tokens.
+
+| Measured item | Result |
+|---|---:|
+| Trials | 65 |
+| Outcome passes | 16 |
+| Outcome pass rate | 24.62% |
+| Ordinary pass rate | 32.00% (8/25) |
+| Negative pass rate | 20.00% (8/40) |
+| Required-record completeness | 6.15% (4/65) |
+| Strict record/process pass rate | 0.00% (0/65) |
+| Average turns | 3.938 |
+| Prompt tokens | 587,007 total; 9,030.88 per trial |
+| Completion tokens | 73,670 total; 1,133.38 per trial |
+| Measured token cost | USD 0.058755 total; USD 0.000904 per trial |
+
+The headline success rate is outcome-graded as required by D4: the decision
+must match, a document request must name the correct missing item, and an
+escalation must carry the correct trigger. Required-record and strict process
+rates remain visible as diagnostics rather than being silently folded into the
+headline measure.
+
+With `P = 16/65`, `F = USD 7.60`, and no fixed monthly cost entered yet:
+
+```text
+average_L1 = 0.058755 / 65 = USD 0.000904
+L2 = (1 - 16/65) x 7.60 = USD 5.729231
+cost_per_task = 0.000904 + 5.729231 = USD 5.730135
+monthly_cost = 5.730135 x 8,000 = USD 45,841.08
+manual_baseline = 7.60 x 8,000 = USD 60,800.00
+expected saving before fixed costs = USD 14,958.92/month
+```
+
+This model is cheap to call, but its expected human fallback cost dominates:
+more than 99.98% of its all-in expected cost is layer 2, not tokens.
+
+### Mistral success-rate sensitivity
+
+| Outcome success rate | Average L1 | Expected fallback L2 | Cost/task | Monthly at 8,000 |
+|---:|---:|---:|---:|---:|
+| 14.62% | USD 0.000904 | USD 6.489231 | USD 6.490135 | USD 51,921.08 |
+| 24.62% measured | USD 0.000904 | USD 5.729231 | USD 5.730135 | USD 45,841.08 |
+| 34.62% | USD 0.000904 | USD 4.969231 | USD 4.970135 | USD 39,761.08 |
+
+### Dominant observed failure
+
+All 65 traces contain at least one `check_coverage` call made with a fabricated
+policy id before the real `lookup_policy` result was used. The interface takes
+`policy_id`, but the preceding claim record only supplies `member_id`. This is
+evidence of a dependency/interface mismatch, not a token-price problem. Keep
+the locked D5 result unchanged for the model comparison; use this reproduced
+failure in D7 or a post-battery improvement, where the correct fix is either to
+make coverage accept an available identifier or to enforce the lookup-before-
+coverage dependency.
+
 ## Sensitivity
 
 Hold measured `average_L1` fixed and calculate the cost per task at:
@@ -84,7 +144,7 @@ break-even exists in that direction.
 | B — tool definitions | Entire tool-schema prompt tokens before vs after D2(a) | D2(a) owner | Pending |
 | T — dependency order | Parallel vs sequential turns and prompt tokens | D2(c) experiment | Available; copy final figures |
 | D — descriptors | Returned tokens per descriptor call v1 vs v2 | D2(b) experiment | Available; copy final figures |
-| P — model performance | Pass rate, average L1 and all-in cost/task | D4/D5(b) harness | Pending live battery |
+| P — model performance | Pass rate, average L1 and all-in cost/task | D4/D5(b) harness | Mistral complete: 24.62%, USD 0.000904 L1, USD 5.730135 all-in; other models pending |
 
 ## Operational caps to state in the report
 
