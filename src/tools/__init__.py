@@ -68,26 +68,6 @@ TOOL_SCHEMAS = [
     {
         "type": "function",
         "function": {
-            "name": "get_preauthorisation",
-            "description": "Call ONLY when check_coverage reported requires_preauth=true for that line. An expired match is not a valid one.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "member_id": {"type": "string"},
-                    "procedure_code": {"type": "string"},
-                    "date_of_service": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "ISO date in YYYY-MM-DD format",
-                    },
-                },
-                "required": ["member_id", "procedure_code", "date_of_service"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
             "name": "get_preauthorisation_v2",
             "description": (
                 "Returns whether a required pre-authorisation is valid, "

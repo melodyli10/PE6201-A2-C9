@@ -1,0 +1,222 @@
+{
+  "monthly_claims": 8000,
+  "failure_cost_usd": 7.6,
+  "fixed_monthly_provider_fees_usd_measured": 0,
+  "manual_monthly_usd": 60800.0,
+  "models": [
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "prompt_version": "v2-final",
+      "source": "eval/results/20260914T023002Z_live_mistralai-mistral-small-3.2-24b-instruct_d6-55-trials/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 14,
+      "ordinary_passed": 8,
+      "negative_passed": 6,
+      "pass_rate": 0.254545,
+      "prompt_tokens": 506046,
+      "completion_tokens": 70241,
+      "token_cost_total_usd": 0.052002,
+      "layer_1_per_task_usd": 0.000945,
+      "layer_2_per_task_usd": 5.665455,
+      "all_in_per_task_usd": 5.6664,
+      "monthly_usd": 45331.2,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0.154545,
+          "cost_per_task_usd": 6.4264,
+          "monthly_usd": 51411.2
+        },
+        {
+          "pass_rate": 0.254545,
+          "cost_per_task_usd": 5.6664,
+          "monthly_usd": 45331.2
+        },
+        {
+          "pass_rate": 0.354545,
+          "cost_per_task_usd": 4.9064,
+          "monthly_usd": 39251.2
+        }
+      ]
+    },
+    {
+      "model_id": "openai/gpt-4.1-mini",
+      "prompt_version": "v2-final",
+      "source": "origin/main:eval/results/20260914T070612Z_live_openai-gpt-4.1-mini/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 23,
+      "ordinary_passed": 23,
+      "negative_passed": 0,
+      "pass_rate": 0.418182,
+      "prompt_tokens": 358863,
+      "completion_tokens": 19066,
+      "token_cost_total_usd": 0.174051,
+      "layer_1_per_task_usd": 0.003165,
+      "layer_2_per_task_usd": 4.421818,
+      "all_in_per_task_usd": 4.424983,
+      "monthly_usd": 35399.86,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0.318182,
+          "cost_per_task_usd": 5.184983,
+          "monthly_usd": 41479.86
+        },
+        {
+          "pass_rate": 0.418182,
+          "cost_per_task_usd": 4.424983,
+          "monthly_usd": 35399.86
+        },
+        {
+          "pass_rate": 0.518182,
+          "cost_per_task_usd": 3.664983,
+          "monthly_usd": 29319.86
+        }
+      ]
+    },
+    {
+      "model_id": "google/gemini-2.5-pro",
+      "prompt_version": "v2-final",
+      "source": "origin/feature/D5-Gemini:eval/results/20260914T154843Z_live_google-gemini-2.5-pro/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 8,
+      "ordinary_passed": 8,
+      "negative_passed": 0,
+      "pass_rate": 0.145455,
+      "prompt_tokens": 315386,
+      "completion_tokens": 135841,
+      "token_cost_total_usd": 1.752643,
+      "layer_1_per_task_usd": 0.031866,
+      "layer_2_per_task_usd": 6.494545,
+      "all_in_per_task_usd": 6.526412,
+      "monthly_usd": 52211.29,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0.045455,
+          "cost_per_task_usd": 7.286412,
+          "monthly_usd": 58291.29
+        },
+        {
+          "pass_rate": 0.145455,
+          "cost_per_task_usd": 6.526412,
+          "monthly_usd": 52211.29
+        },
+        {
+          "pass_rate": 0.245455,
+          "cost_per_task_usd": 5.766412,
+          "monthly_usd": 46131.29
+        }
+      ]
+    },
+    {
+      "model_id": "qwen/qwen3.6-35b-a3b",
+      "prompt_version": "v2-final",
+      "source": "origin/main:eval/results/20260915T012109Z_live_qwen-qwen3.6-35b-a3b/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 14,
+      "ordinary_passed": 14,
+      "negative_passed": 0,
+      "pass_rate": 0.254545,
+      "prompt_tokens": 926742,
+      "completion_tokens": 80042,
+      "token_cost_total_usd": 0.102366,
+      "layer_1_per_task_usd": 0.001861,
+      "layer_2_per_task_usd": 5.665455,
+      "all_in_per_task_usd": 5.667316,
+      "monthly_usd": 45338.53,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0.154545,
+          "cost_per_task_usd": 6.427316,
+          "monthly_usd": 51418.53
+        },
+        {
+          "pass_rate": 0.254545,
+          "cost_per_task_usd": 5.667316,
+          "monthly_usd": 45338.53
+        },
+        {
+          "pass_rate": 0.354545,
+          "cost_per_task_usd": 4.907316,
+          "monthly_usd": 39258.53
+        }
+      ]
+    },
+    {
+      "model_id": "deepseek/deepseek-chat",
+      "prompt_version": "v2-final",
+      "source": "origin/feature4/lyf:eval/results/20260915T051830Z_live_deepseek-deepseek-chat/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 8,
+      "ordinary_passed": 7,
+      "negative_passed": 1,
+      "pass_rate": 0.145455,
+      "prompt_tokens": 600610,
+      "completion_tokens": 22962,
+      "token_cost_total_usd": 0.178225,
+      "layer_1_per_task_usd": 0.00324,
+      "layer_2_per_task_usd": 6.494545,
+      "all_in_per_task_usd": 6.497786,
+      "monthly_usd": 51982.29,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0.045455,
+          "cost_per_task_usd": 7.257786,
+          "monthly_usd": 58062.29
+        },
+        {
+          "pass_rate": 0.145455,
+          "cost_per_task_usd": 6.497786,
+          "monthly_usd": 51982.29
+        },
+        {
+          "pass_rate": 0.245455,
+          "cost_per_task_usd": 5.737786,
+          "monthly_usd": 45902.29
+        }
+      ]
+    },
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "prompt_version": "v1",
+      "source": "origin/main:eval/results/20260915T053834Z_live_mistralai-mistral-small-3.2-24b_V1/trials_judged.jsonl",
+      "trials": 55,
+      "passed": 3,
+      "ordinary_passed": 3,
+      "negative_passed": 0,
+      "pass_rate": 0.054545,
+      "prompt_tokens": 497311,
+      "completion_tokens": 45055,
+      "token_cost_total_usd": 0.046309,
+      "layer_1_per_task_usd": 0.000842,
+      "layer_2_per_task_usd": 7.185455,
+      "all_in_per_task_usd": 7.186297,
+      "monthly_usd": 57490.37,
+      "sensitivity_plus_minus_10pp": [
+        {
+          "pass_rate": 0,
+          "cost_per_task_usd": 7.600842,
+          "monthly_usd": 60806.74
+        },
+        {
+          "pass_rate": 0.054545,
+          "cost_per_task_usd": 7.186297,
+          "monthly_usd": 57490.37
+        },
+        {
+          "pass_rate": 0.154545,
+          "cost_per_task_usd": 6.426297,
+          "monthly_usd": 51410.37
+        }
+      ]
+    }
+  ],
+  "mistral_v1_to_v2": {
+    "pass_rate_gain_percentage_points": 20.0,
+    "all_in_cost_saved_per_task_usd": 1.519897
+  },
+  "mistral_vs_gpt_break_even": {
+    "cheap_token_only_usd": 0.000945,
+    "expensive_all_in_usd": 4.424983,
+    "required_cheap_pass_rate": 0.41789,
+    "mistral_shortfall_percentage_points": 16.33
+  }
+}

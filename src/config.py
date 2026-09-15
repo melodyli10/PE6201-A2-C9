@@ -51,7 +51,9 @@ def price_for(model: str) -> tuple[float, float]:
 
 # Per-run limits. The loop checks exhaustion before the next request and overspend
 # before executing tools. A sent live request can still exceed its remaining budget.
-BUDGET_CEILING_USD = 1.00
+# Worst selected live trial was USD 0.058585 (Gemini). USD 0.10 leaves about
+# 70% headroom without permitting a tenfold larger claim-level API bill.
+BUDGET_CEILING_USD = 0.10
 STEP_CAP = 10
 # D3 autonomy setting for the irreversible decision-write action.
 AUTONOMY = "confirm"
