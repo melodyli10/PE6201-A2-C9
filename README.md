@@ -98,6 +98,5 @@ The harness uses mixed grading:
 - Code checks for deterministic requirements such as outcome, trigger, tool behaviour and gated action.
 - Judgement checks for selected cases where reason and evidence quality require review.
 
-Earlier 55-trial runs are preserved as diagnostic history only.
 
 Final D4 and D5 evidence should use the current 105-trial D4 plan and 65-trial live-model battery.
