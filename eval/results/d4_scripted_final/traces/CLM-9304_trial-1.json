@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9304",
@@ -36,7 +36,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.922697+00:00",
+      "ts": "2026-09-15T08:08:21.649605+00:00",
       "case_id": "CLM-9304",
       "decision": "approve_in_principle",
       "reason": "Policy POL-3310 active to 2027-03-31. Hospital H-114 on panel. 1 of 3 lines payable; 2 excluded. Approved total 180 against 9200 remaining on the annual limit.",
@@ -207,7 +207,7 @@
         "content": "Fetch claim CLM-9304.",
         "tool_calls": [
           {
-            "id": "call_2e432e438891",
+            "id": "call_054b275d9232",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -218,7 +218,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_2e432e438891",
+        "tool_call_id": "call_054b275d9232",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9304\", \"member_id\": \"M-2214\", \"hospital_id\": \"H-114\", \"date_of_service\": \"2026-09-25\", \"narrative\": \"I had an outpatient consultation together with two cosmetic procedures during the same visit.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 180}, {\"code\": \"31255\", \"amount\": 300}, {\"code\": \"15823\", \"amount\": 700}]}"
       },
@@ -227,7 +227,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_8566e8d8a8ec",
+            "id": "call_d01ae510968d",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -235,7 +235,7 @@
             }
           },
           {
-            "id": "call_bad93059f495",
+            "id": "call_d653c91c3bac",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -243,7 +243,7 @@
             }
           },
           {
-            "id": "call_ae6caf996d5c",
+            "id": "call_f29df1227f08",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -254,19 +254,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_8566e8d8a8ec",
+        "tool_call_id": "call_d01ae510968d",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-3310\", \"product\": \"Shield Plus\", \"status\": \"active\", \"start_date\": \"2026-04-01\", \"end_date\": \"2027-03-31\", \"annual_limit\": 12000, \"used_to_date\": 2800, \"exclusions\": [{\"code\": \"31255\", \"rule\": \"EX-14 cosmetic dermatology\"}, {\"code\": \"15823\", \"rule\": \"EX-14 cosmetic dermatology\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_bad93059f495",
+        "tool_call_id": "call_d653c91c3bac",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-114\", \"panel\": true, \"name\": \"Riverside General\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_ae6caf996d5c",
+        "tool_call_id": "call_f29df1227f08",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -275,7 +275,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_490aaf8b0b95",
+            "id": "call_6f51a25553b6",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -283,7 +283,7 @@
             }
           },
           {
-            "id": "call_950f93fca245",
+            "id": "call_96fee9ac4e8a",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -291,7 +291,7 @@
             }
           },
           {
-            "id": "call_22f5605ce26a",
+            "id": "call_eb006c664b91",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -302,19 +302,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_490aaf8b0b95",
+        "tool_call_id": "call_6f51a25553b6",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_950f93fca245",
+        "tool_call_id": "call_96fee9ac4e8a",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"31255\", \"covered\": false, \"exclusion_rule\": \"EX-14 cosmetic dermatology\", \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_22f5605ce26a",
+        "tool_call_id": "call_eb006c664b91",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"15823\", \"covered\": false, \"exclusion_rule\": \"EX-14 cosmetic dermatology\", \"requires_preauth\": false}"
       },
@@ -323,7 +323,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_2fed975b16cd",
+            "id": "call_4274d499efb9",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -334,7 +334,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_2fed975b16cd",
+        "tool_call_id": "call_4274d499efb9",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9304\""
       }

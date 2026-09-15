@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9211",
@@ -34,7 +34,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.953394+00:00",
+      "ts": "2026-09-15T08:08:21.712854+00:00",
       "case_id": "CLM-9211",
       "decision": "escalate",
       "reason": "Matches prior claim CLM-9100 on member, hospital, date of service and lines.",
@@ -134,7 +134,7 @@
         "content": "Fetch claim CLM-9211.",
         "tool_calls": [
           {
-            "id": "call_03d993cae72e",
+            "id": "call_cb1cd68dca9f",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -145,7 +145,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_03d993cae72e",
+        "tool_call_id": "call_cb1cd68dca9f",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9211\", \"member_id\": \"M-6118\", \"hospital_id\": \"H-207\", \"date_of_service\": \"2026-09-20\", \"narrative\": \"I am submitting the same consultation charge again because I have not received the payment yet.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 210}]}"
       },
@@ -154,7 +154,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_76aea146092e",
+            "id": "call_d8416808ba87",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -162,7 +162,7 @@
             }
           },
           {
-            "id": "call_0579251171ad",
+            "id": "call_ca8a40af6419",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -170,7 +170,7 @@
             }
           },
           {
-            "id": "call_1b87ab1fc670",
+            "id": "call_4580d66e7081",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -181,19 +181,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_76aea146092e",
+        "tool_call_id": "call_d8416808ba87",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-7220\", \"product\": \"Shield Basic\", \"status\": \"active\", \"start_date\": \"2026-02-01\", \"end_date\": \"2027-01-31\", \"annual_limit\": 8000, \"used_to_date\": 1200, \"exclusions\": [{\"code\": \"31255\", \"rule\": \"EX-14 cosmetic dermatology\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_0579251171ad",
+        "tool_call_id": "call_ca8a40af6419",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-207\", \"panel\": true, \"name\": \"Mount Elizabeth East\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_1b87ab1fc670",
+        "tool_call_id": "call_4580d66e7081",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": true, \"matched_claim_id\": \"CLM-9100\", \"matched_facts\": [\"member_id\", \"hospital_id\", \"date_of_service\", \"lines\"], \"prior_decision\": \"approve_in_principle\", \"decided_on\": \"2026-09-22\"}"
       },
@@ -202,7 +202,7 @@
         "content": "Escalating: duplicate_claim.",
         "tool_calls": [
           {
-            "id": "call_ec48a26441e1",
+            "id": "call_44353dda9d4c",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -213,7 +213,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_ec48a26441e1",
+        "tool_call_id": "call_44353dda9d4c",
         "name": "issue_decision_letter",
         "content": "\"recorded: escalate on CLM-9211\""
       }

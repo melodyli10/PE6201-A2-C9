@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9214",
@@ -35,7 +35,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.960473+00:00",
+      "ts": "2026-09-15T08:08:21.727182+00:00",
       "case_id": "CLM-9214",
       "decision": "approve_in_principle",
       "reason": "Policy POL-7220 active to 2027-01-31. Hospital H-114 on panel. 1 of 1 lines payable; 0 excluded. Approved total 210 against 6800 remaining on the annual limit.",
@@ -170,7 +170,7 @@
         "content": "Fetch claim CLM-9214.",
         "tool_calls": [
           {
-            "id": "call_a0065c453430",
+            "id": "call_caccc5848575",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -181,7 +181,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_a0065c453430",
+        "tool_call_id": "call_caccc5848575",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9214\", \"member_id\": \"M-6118\", \"hospital_id\": \"H-114\", \"date_of_service\": \"2026-09-20\", \"narrative\": \"Routine consultation at Riverside General. The itemised bill is attached.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 210}]}"
       },
@@ -190,7 +190,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_98ba5af10765",
+            "id": "call_ed9133a89884",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -198,7 +198,7 @@
             }
           },
           {
-            "id": "call_d8e8c3a32abd",
+            "id": "call_2f0043649074",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -206,7 +206,7 @@
             }
           },
           {
-            "id": "call_88dfb6d835d5",
+            "id": "call_7d027f17a7ab",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -217,19 +217,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_98ba5af10765",
+        "tool_call_id": "call_ed9133a89884",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-7220\", \"product\": \"Shield Basic\", \"status\": \"active\", \"start_date\": \"2026-02-01\", \"end_date\": \"2027-01-31\", \"annual_limit\": 8000, \"used_to_date\": 1200, \"exclusions\": [{\"code\": \"31255\", \"rule\": \"EX-14 cosmetic dermatology\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_d8e8c3a32abd",
+        "tool_call_id": "call_2f0043649074",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-114\", \"panel\": true, \"name\": \"Riverside General\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_88dfb6d835d5",
+        "tool_call_id": "call_7d027f17a7ab",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -238,7 +238,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_65fc7a995ee9",
+            "id": "call_fc8cb30066fa",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -249,7 +249,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_65fc7a995ee9",
+        "tool_call_id": "call_fc8cb30066fa",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
@@ -258,7 +258,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_990237abc0ce",
+            "id": "call_73bf6e723105",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -269,7 +269,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_990237abc0ce",
+        "tool_call_id": "call_73bf6e723105",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9214\""
       }
