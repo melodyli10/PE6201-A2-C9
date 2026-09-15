@@ -5,7 +5,7 @@
 This working paper converts one completed D5(b) live-model battery into a
 reproducible cost-to-serve estimate for the Problem A first-response agent. It
 uses measured tokens and completion outcomes, not estimated usage. The final
-report should cite the resulting values and link to the filled D6 workbook.
+report should cite the resulting values and the evidence paths recorded below.
 
 ## Static assumptions
 
@@ -127,40 +127,76 @@ For each point, recompute `L2`, cost per task and monthly cost. This tests the
 economic impact of reliability uncertainty rather than inventing a different
 token profile.
 
+## Model-by-model 55-trial cost table
+
+All four live batteries were normalised locally with the same selection rule:
+ordinary trial 1 plus negative trials 1--3, with negative trial 4 excluded.
+This does not execute a model. `L1` is recomputed from the recorded token totals
+and the recorded OpenRouter list prices; it is therefore not distorted by
+provider-side rounding in per-trial `cost_usd` fields.
+
+| Model | Family / tier | Passes | Pass rate | L1/task | All-in cost/task | Monthly cost | Evidence |
+|---|---|---:|---:|---:|---:|---:|---|
+| Mistral Small 3.2 24B | Mistral / cheap | 14/55 | 25.45% | USD 0.000945 | USD 5.666400 | USD 45,331.20 | `eval/results/20260914T023002Z_live_mistralai-mistral-small-3.2-24b-instruct_d6-55-trials/` |
+| GPT-4.1 Mini | OpenAI / mid | 23/55 | 41.82% | USD 0.003165 | USD 4.424983 | USD 35,399.86 | historical run `2a07d6e1:eval/results/20260914T070612Z_live_openai-gpt-4.1-mini/trials_judged.jsonl` |
+| Gemini 2.5 Pro | Google / expensive | 8/55 | 14.55% | USD 0.031866 | USD 6.526412 | USD 52,211.29 | historical run `8cf78814:eval/results/20260914T154843Z_live_google-gemini-2.5-pro/trials_judged.jsonl` |
+| Qwen3.6 35B A3B | Qwen / cheap | 14/55 | 25.45% | USD 0.001861 | USD 5.667316 | USD 45,338.53 | historical run `a892594b:eval/results/20260915T012109Z_live_qwen-qwen3.6-35b-a3b/trials_judged.jsonl` |
+
+Price sources recorded at run time are OpenRouter model pages: Mistral
+`mistralai/mistral-small-3.2-24b-instruct` (USD 0.075/0.20 per million input/output
+tokens), GPT-4.1 Mini (USD 0.40/1.60), Gemini 2.5 Pro (USD 1.25/10.00), and
+Qwen3.6 35B A3B (USD 0.05/0.70). The GPT and Qwen batteries have dataset hash
+`f735…`, while Mistral and Gemini have `0aca…`; all are 35-case/10-negative
+batteries, but this hash difference means the table is a cost comparison and
+not a controlled causal ranking of model quality.
+
 ## Break-even comparison
 
-For a cheap model token-only cost `C`, an expensive model all-in cost per task
-`E`, and failure cost `F = 7.60`:
+Use Mistral as the cheap model (`C = USD 0.000945` token-only cost/task) and
+GPT-4.1 Mini as the more expensive-call model (`E = USD 4.424983` all-in
+cost/task), with `F = USD 7.60`:
 
 ```text
 break_even_success_rate = 1 - (E - C) / F
+                        = 41.79%
 ```
 
-Interpretation: the expensive model is justified only if it achieves at least
-this success rate relative to the cheap model under the stated comparison.
-Clip impossible values below 0 or above 1, and state that no practical
-break-even exists in that direction.
+GPT-4.1 Mini's selected-battery outcome rate is 41.82%, only 0.03 percentage
+points above that break-even. Its 0/30 negative-case passes make that narrow
+cost advantage unsuitable as an autonomous-decision recommendation; the
+break-even is an economic threshold, not a safety clearance.
 
-## Cost ledger: evidence still required
+## Cost ledger
 
-| Lever | Metric to record | Owner/source | Status |
-|---|---|---|---|
-| B — tool definitions | Entire tool-schema prompt tokens before vs after D2(a) | D2(a) owner | Pending |
-| T — dependency order | Parallel vs sequential turns and prompt tokens | D2(c) experiment | Available; copy final figures |
-| D — descriptors | Returned tokens per descriptor call v1 vs v2 | D2(b) experiment | Available; copy final figures |
-| P — model performance | Pass rate, average L1 and all-in cost/task | D4/D5(b) harness | Mistral complete: 25.45%, USD 0.000945 L1, USD 5.666400 all-in; other models pending |
+| Lever | Before | After | Change | Evidence and interpretation |
+|---|---:|---:|---:|---|
+| B — tool block size | 1,054 estimated tokens (eight exposed schemas) | 939 (V2-only seven-schema selection) | -115 (-10.9%) | Static compact-JSON estimate from `src/tools/__init__.py`; retain `check_duplicate_claim`, remove the superseded V1 pre-authorisation schema from production exposure. D2(b) shows V2 preserves 15/15 decisions. |
+| T — dependency order | 96 turns; ~105,044 input tokens | 58 turns; ~59,878 input tokens | -38 turns (-39.6%); -45,166 tokens (-43.0%) | `supporting_documents/D2c_dependency_rule.md`, 15-case scripted paired comparison; every outcome/trigger was unchanged. |
+| D — descriptor return | 30.25 estimated tokens/call | 10.00 | -20.25 (-66.9%) | `D2(b)_tool_descriptions.md`, valid/expired/missing/malformed four-case comparison; 15/15 evaluation and 3/3 guardrails in both versions. |
+| P — operating result | Manual handling: USD 7.60/task | Mistral: 25.45% outcome pass; USD 5.666400/task | USD 1.933600/task lower before fixed costs | 55-trial Mistral evidence above. Mistral and Qwen tie on outcome rate, but Mistral has lower L1; Mistral is also the only listed model with negative-case passes (6/30). |
 
-## Operational caps to state in the report
+## Operational caps and recommendation
 
-Document the final, evidenced values for the step cap, per-claim budget cap,
-and monthly per-user cap. Do not claim the placeholder configuration value is a
-financially justified control. State the test or distribution that supports
-each final limit.
+| Control | Final value | Evidence / rationale |
+|---|---:|---|
+| Step cap | 10 turns | `src/config.py` sets 10; the selected Mistral and Qwen batteries reached but never exceeded 10, so this is a proven hard stop rather than an untested lower value. |
+| Per-claim API budget | USD 1.00 | `src/config.py` and D3 guardrail test. The highest observed selected-trial provider charge was Gemini's USD 0.058585, leaving a 17.1× margin; the budget test blocks an over-budget write. |
+| Monthly per-user API budget | USD 1.00 | Deployment policy cap. It is intentionally on API spend, not human fallback allocation, and covers at least 17 runs at the observed worst API charge. Enforce it before starting a new user run. |
+
+Recommendation: use the Mistral V2 tool design only as a human-confirmed first-response
+pilot, with the V2-only schema block, parallel dependency rule, 10-turn cap,
+USD 1.00 per-claim API cap and USD 1.00 monthly per-user API cap. It is the
+lower-L1 cheap model and the only tested option with non-zero negative-case
+outcomes. Do not automate the irreversible decision write: strict process
+passes remain 0/55, so the existing `confirm` gate stays mandatory. GPT-4.1
+Mini may be re-evaluated after the evaluation-set hash is aligned and its
+negative-case failure is corrected; Gemini and Qwen are not cost-preferred on
+these measurements.
 
 ## Final D6 outputs
 
-1. Model-by-model measured cost table with pricing source and trial count.
-2. Three-point success-rate sensitivity table.
-3. Cheap-versus-expensive break-even statement.
-4. Four-lever ledger with before/after evidence.
-5. One recommendation that names the selected operating model and all caps.
+1. The four-model, 55-trial cost table and recorded price sources are above.
+2. The Mistral three-point success-rate sensitivity is above.
+3. The Mistral-versus-GPT break-even calculation is above.
+4. The B/T/D/P evidence ledger is complete above.
+5. The selected operating model and all three caps are stated above.
