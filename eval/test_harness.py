@@ -39,6 +39,51 @@ class HarnessTests(unittest.TestCase):
             harness.canonical_missing("itemised bill for line 62480"),
         )
 
+    def test_outcome_grade_is_not_redefined_by_process_diagnostics(self):
+        checks = [
+            {"check": "case_id", "passed": True},
+            {"check": "decision", "passed": True},
+            {"check": "evidence_matches_trace", "passed": False},
+            {"check": "gated_action_called_once", "passed": True},
+        ]
+        outcome, record, strict = harness.score_dimensions(checks)
+        self.assertTrue(outcome)
+        self.assertTrue(record)
+        self.assertFalse(strict)
+
+    def test_wrong_escalation_trigger_fails_the_outcome_grade(self):
+        checks = [
+            {"check": "case_id", "passed": True},
+            {"check": "decision", "passed": True},
+            {"check": "trigger", "passed": False},
+            {"check": "escalate_to", "passed": False},
+        ]
+        outcome, record, strict = harness.score_dimensions(checks)
+        self.assertFalse(outcome)
+        self.assertFalse(record)
+        self.assertFalse(strict)
+
+    def test_case_id_is_record_integrity_not_the_d4_outcome(self):
+        checks = [
+            {"check": "case_id", "passed": False},
+            {"check": "decision", "passed": True},
+        ]
+        outcome, record, strict = harness.score_dimensions(checks)
+        self.assertTrue(outcome)
+        self.assertFalse(record)
+        self.assertFalse(strict)
+
+    def test_wrong_missing_item_fails_request_outcome(self):
+        checks = [
+            {"check": "case_id", "passed": True},
+            {"check": "decision", "passed": True},
+            {"check": "missing_item", "passed": False},
+        ]
+        outcome, record, strict = harness.score_dimensions(checks)
+        self.assertFalse(outcome)
+        self.assertFalse(record)
+        self.assertFalse(strict)
+
     def test_two_runs_receive_separate_decision_ledgers(self):
         original_backend = config.BACKEND
         config.BACKEND = "scripted"

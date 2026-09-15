@@ -71,6 +71,7 @@ def write_result_tables(run_dir: Path, rows: list[dict]) -> None:
     fields = [
         "model_id", "case_id", "case_type", "trial", "check_type",
         "expected_decision", "actual_decision", "code_passed",
+        "required_record_passed", "strict_passed",
         "judgement_status", "passed", "turns", "prompt_tokens",
         "completion_tokens", "cost_usd", "stopped_early", "trace_file",
     ]
@@ -79,14 +80,16 @@ def write_result_tables(run_dir: Path, rows: list[dict]) -> None:
         writer.writeheader()
         writer.writerows(rows)
     with (run_dir / "results_table.md").open("w", encoding="utf-8", newline="\n") as stream:
-        stream.write("| Case | Type | Trial | Check | Expected | Actual | Code | Judgement | Final | Turns |\n")
-        stream.write("|---|---|---:|---|---|---|---|---|---|---:|\n")
+        stream.write("| Case | Type | Trial | Check | Expected | Actual | Outcome | Record | Strict | Judgement | Final | Turns |\n")
+        stream.write("|---|---|---:|---|---|---|---|---|---|---|---|---:|\n")
         for row in rows:
             final = "pending" if row["passed"] is None else ("PASS" if row["passed"] else "FAIL")
             stream.write(
                 f"| {row['case_id']} | {row['case_type']} | {row['trial']} | "
                 f"{row['check_type']} | {row['expected_decision']} | "
                 f"{row['actual_decision']} | {'PASS' if row['code_passed'] else 'FAIL'} | "
+                f"{'PASS' if row['required_record_passed'] else 'FAIL'} | "
+                f"{'PASS' if row['strict_passed'] else 'FAIL'} | "
                 f"{row['judgement_status']} | {final} | {row['turns']} |\n"
             )
 
@@ -384,6 +387,35 @@ def score_record(case_id: str, expected: dict, actual: dict | None,
     return all(row["passed"] for row in checks), checks
 
 
+def score_dimensions(checks: list[dict]) -> tuple[bool, bool, bool]:
+    """Separate the D4 outcome grade from record and process diagnostics.
+
+    The brief says D4 is outcome-graded and that an escalation reached by the
+    wrong trigger is not a pass.  Tool-path, evidence-format and gate checks are
+    still valuable evidence, but they must not silently redefine that measured
+    outcome pass rate.  The three returned dimensions are therefore:
+
+    * outcome: decision plus the exact missing item or escalation trigger when present;
+    * required record: outcome plus case id and decision-specific fields;
+    * strict: every recorded check, including evidence and loop/gate behaviour.
+    """
+    by_name = {row["check"]: bool(row["passed"]) for row in checks}
+    outcome_passed = (
+        by_name.get("decision", False)
+        and by_name.get("trigger", True)
+        and by_name.get("missing_item", True)
+    )
+    record_checks = (
+        "escalate_to", "missing_item", "line_dispositions",
+        "approved_total", "refused_total", "settlement_basis",
+    )
+    required_record_passed = outcome_passed and by_name.get("case_id", False) and all(
+        by_name.get(name, True) for name in record_checks
+    )
+    strict_passed = bool(checks) and all(bool(row["passed"]) for row in checks)
+    return outcome_passed, required_record_passed, strict_passed
+
+
 def supporting_fixtures(case_id: str, fixtures: dict[str, dict]) -> dict:
     claim = fixtures["claims"][case_id]
     member = fixtures["members"][claim["member_id"]]
@@ -391,17 +423,92 @@ def supporting_fixtures(case_id: str, fixtures: dict[str, dict]) -> dict:
             "hospital": fixtures["hospitals"][claim["hospital_id"]]}
 
 
+def trial_row(
+    *, case: dict, trial: int, expected: dict, result: dict,
+    records: list[dict], fixtures: dict[str, dict], metadata: dict,
+) -> tuple[dict, dict | None]:
+    """Build the result row and optional judgement input for one completed trial.
+
+    Keeping this independent from execution lets a live run resume safely after a
+    transient provider failure: completed trace files are scored again locally,
+    while only missing traces make further API calls.
+    """
+    case_id = case["case_id"]
+    calls = tool_calls(result["messages"])
+    observations = tool_observations(result["messages"])
+    actual = records[0] if len(records) == 1 else None
+    _legacy_strict_passed, checks = score_record(
+        case_id, expected, actual, calls, result["stopped_early"], fixtures
+    )
+    code_passed, required_record_passed, strict_passed = score_dimensions(checks)
+    judgement_required = bool(case.get("judgement_check"))
+    judge_input = {
+        "case_id": case_id, "trial": trial, "model_id": metadata["model_id"],
+        "expected_label": expected, "claim_fixture": fixtures["claims"][case_id],
+        "supporting_fixtures": supporting_fixtures(case_id, fixtures),
+        "actual_record": actual, "tool_observations": observations,
+    }
+    judge_hash = hash_json(judge_input) if judgement_required else None
+    queue_item = None
+    if judgement_required:
+        queue_item = {
+            "judge_input_sha256": judge_hash,
+            "prompt_file": JUDGE_PROMPT_PATH.relative_to(ROOT).as_posix(),
+            "input": judge_input,
+        }
+    negative = expected["expected_decision"] != "approve_in_principle"
+    trace_name = f"{case_id}_trial-{trial}.json"
+    return {
+        "run_id": metadata["run_id"], "model_id": metadata["model_id"],
+        "case_id": case_id, "author": case["author"],
+        "family": expected.get("family"),
+        "case_type": "negative" if negative else "ordinary", "trial": trial,
+        "check_type": "code+llm_judgement" if judgement_required else "code",
+        "expected_decision": expected["expected_decision"],
+        "actual_decision": actual.get("decision") if actual else None,
+        "expected_trigger": expected.get("trigger"),
+        "actual_trigger": actual.get("trigger") if actual else None,
+        "expected_missing": expected.get("missing"),
+        "actual_missing": actual.get("missing") if actual else None,
+        "code_passed": code_passed,
+        "code_failures": [
+            item["check"] for item in checks
+            if item["check"] in {"decision", "trigger", "missing_item"} and not item["passed"]
+        ],
+        "required_record_passed": required_record_passed,
+        "strict_passed": strict_passed,
+        "diagnostic_failures": [item["check"] for item in checks if not item["passed"]],
+        "judgement_required": judgement_required,
+        "judgement_status": "pending" if judgement_required else "not_required",
+        "judge_input_sha256": judge_hash,
+        "passed": None if judgement_required else code_passed,
+        "turns": result["turns"], "prompt_tokens": result["prompt_tokens"],
+        "completion_tokens": result["completion_tokens"], "cost_usd": result["cost_usd"],
+        "stopped_early": result["stopped_early"],
+        "tool_trace": [call["name"] for call in calls],
+        "trace_file": f"traces/{trace_name}",
+    }, queue_item
+
+
 def summarise(rows: list[dict], metadata: dict) -> dict:
     def group(case_type: str | None) -> dict:
         selected = [row for row in rows if case_type is None or row["case_type"] == case_type]
         graded = [row for row in selected if row["passed"] is not None]
         code_passes = sum(row["code_passed"] for row in selected)
+        record_passes = sum(row["required_record_passed"] for row in selected)
+        strict_passes = sum(row["strict_passed"] for row in selected)
         final_passes = sum(row["passed"] is True for row in graded)
         pending = sum(row["passed"] is None for row in selected)
         return {
             "trials": len(selected),
             "code_passed": code_passes,
             "code_pass_rate": round(code_passes / len(selected), 4) if selected else None,
+            "outcome_passed": code_passes,
+            "outcome_pass_rate": round(code_passes / len(selected), 4) if selected else None,
+            "required_record_passed": record_passes,
+            "required_record_pass_rate": round(record_passes / len(selected), 4) if selected else None,
+            "strict_passed": strict_passes,
+            "strict_pass_rate": round(strict_passes / len(selected), 4) if selected else None,
             "final_graded": len(graded),
             "final_passed": final_passes,
             # A submission-level pass rate is not a measurement until every
@@ -414,6 +521,11 @@ def summarise(rows: list[dict], metadata: dict) -> dict:
         }
     return {
         "metadata": metadata,
+        "scoring_basis": {
+            "primary": "D4 outcome grade: correct decision plus exact missing item or escalation trigger where applicable",
+            "required_record": "primary outcome plus decision-specific structured fields",
+            "strict": "all record, evidence, gated-action, and loop checks",
+        },
         "cases": len({row["case_id"] for row in rows}),
         "negative_cases": len({row["case_id"] for row in rows if row["case_type"] == "negative"}),
         "overall": group(None), "ordinary": group("ordinary"), "negative": group("negative"),
@@ -447,83 +559,71 @@ def run(args: argparse.Namespace) -> Path:
     config.price_for(config.MODEL)  # Reject unknown prices before the first request.
     evaluated_model = config.MODEL if args.backend == "live" else "scripted-policy-v1"
 
-    started = datetime.now(timezone.utc)
-    run_id = f"{started.strftime('%Y%m%dT%H%M%SZ')}_{safe_name(args.backend)}_{safe_name(evaluated_model)}"
-    run_dir = Path(args.output_dir).resolve() / run_id
-    traces_dir = run_dir / "traces"
-    traces_dir.mkdir(parents=True, exist_ok=False)
-    metadata = {
-        "run_id": run_id, "suite_id": suite_id, "backend": args.backend,
-        "model_id": evaluated_model, "configured_model": config.MODEL,
-        "prompt_version": args.prompt_version,
-        "run_date_utc": started.isoformat(), "git_commit": git_commit(),
-        "dataset_sha256": dataset_hash(),
-        "system_prompt_sha256": hashlib.sha256(loop.SYSTEM_PROMPT.encode("utf-8")).hexdigest(),
-        "judge_prompt": JUDGE_PROMPT_PATH.relative_to(ROOT).as_posix(),
-        "judge_prompt_sha256": hashlib.sha256(JUDGE_PROMPT_PATH.read_bytes()).hexdigest(),
-        "trial_count": len(plan),
-    }
-    write_json(run_dir / "metadata.json", metadata)
+    if args.resume_dir:
+        run_dir = args.resume_dir.resolve()
+        traces_dir = run_dir / "traces"
+        metadata = read_json(run_dir / "metadata.json")
+        required = {
+            "suite_id": suite_id, "backend": args.backend,
+            "model_id": evaluated_model, "prompt_version": args.prompt_version,
+            "trial_count": len(plan), "dataset_sha256": dataset_hash(),
+            "system_prompt_sha256": hashlib.sha256(loop.SYSTEM_PROMPT.encode("utf-8")).hexdigest(),
+        }
+        mismatches = {key: (metadata.get(key), value) for key, value in required.items()
+                      if metadata.get(key) != value}
+        if mismatches:
+            raise ValueError(f"resume directory does not match the locked run: {mismatches}")
+        if not traces_dir.is_dir():
+            raise ValueError(f"resume directory has no traces/: {run_dir}")
+    else:
+        started = datetime.now(timezone.utc)
+        run_id = f"{started.strftime('%Y%m%dT%H%M%SZ')}_{safe_name(args.backend)}_{safe_name(evaluated_model)}"
+        run_dir = Path(args.output_dir).resolve() / run_id
+        traces_dir = run_dir / "traces"
+        traces_dir.mkdir(parents=True, exist_ok=False)
+        metadata = {
+            "run_id": run_id, "suite_id": suite_id, "backend": args.backend,
+            "model_id": evaluated_model, "configured_model": config.MODEL,
+            "prompt_version": args.prompt_version,
+            "run_date_utc": started.isoformat(), "git_commit": git_commit(),
+            "dataset_sha256": dataset_hash(),
+            "system_prompt_sha256": hashlib.sha256(loop.SYSTEM_PROMPT.encode("utf-8")).hexdigest(),
+            "judge_prompt": JUDGE_PROMPT_PATH.relative_to(ROOT).as_posix(),
+            "judge_prompt_sha256": hashlib.sha256(JUDGE_PROMPT_PATH.read_bytes()).hexdigest(),
+            "trial_count": len(plan),
+        }
+        write_json(run_dir / "metadata.json", metadata)
 
     fixtures = fixture_indexes()
     rows, queue = [], []
     for index, (case, trial) in enumerate(plan, 1):
         case_id, expected = case["case_id"], labels[case["case_id"]]
-        negative = expected["expected_decision"] != "approve_in_principle"
         print(f"[{index:02d}/{len(plan)}] {case_id} trial {trial}", flush=True)
-        with isolated_trial() as ledger:
-            result = loop.run_case(case_id, operator_confirm=lambda _proposal: True)
-            records = read_ledger(ledger)
-
-        calls = tool_calls(result["messages"])
-        observations = tool_observations(result["messages"])
-        actual = records[0] if len(records) == 1 else None
-        code_passed, checks = score_record(
-            case_id, expected, actual, calls, result["stopped_early"], fixtures
-        )
         trace_name = f"{case_id}_trial-{trial}.json"
-        write_json(traces_dir / trace_name, {
-            "metadata": metadata, "case": case, "trial": trial,
-            "expected_label": expected, "decision_records": records,
-            "code_checks": checks, "run_result": result,
-        })
+        trace_path = traces_dir / trace_name
+        if trace_path.exists():
+            trace = read_json(trace_path)
+            result, records = trace["run_result"], trace["decision_records"]
+        else:
+            with isolated_trial() as ledger:
+                result = loop.run_case(case_id, operator_confirm=lambda _proposal: True)
+                records = read_ledger(ledger)
+            calls = tool_calls(result["messages"])
+            actual = records[0] if len(records) == 1 else None
+            _, checks = score_record(case_id, expected, actual, calls, result["stopped_early"], fixtures)
+            write_json(trace_path, {
+                "metadata": metadata, "case": case, "trial": trial,
+                "expected_label": expected, "decision_records": records,
+                "code_checks": checks, "run_result": result,
+            })
 
-        judgement_required = bool(case.get("judgement_check"))
-        judge_input = {
-            "case_id": case_id, "trial": trial, "model_id": evaluated_model,
-            "expected_label": expected, "claim_fixture": fixtures["claims"][case_id],
-            "supporting_fixtures": supporting_fixtures(case_id, fixtures),
-            "actual_record": actual, "tool_observations": observations,
-        }
-        judge_hash = hash_json(judge_input) if judgement_required else None
-        if judgement_required:
-            queue.append({"judge_input_sha256": judge_hash,
-                          "prompt_file": JUDGE_PROMPT_PATH.relative_to(ROOT).as_posix(),
-                          "input": judge_input})
-
-        rows.append({
-            "run_id": run_id, "model_id": evaluated_model, "case_id": case_id,
-            "author": case["author"], "family": expected.get("family"),
-            "case_type": "negative" if negative else "ordinary", "trial": trial,
-            "check_type": "code+llm_judgement" if judgement_required else "code",
-            "expected_decision": expected["expected_decision"],
-            "actual_decision": actual.get("decision") if actual else None,
-            "expected_trigger": expected.get("trigger"),
-            "actual_trigger": actual.get("trigger") if actual else None,
-            "expected_missing": expected.get("missing"),
-            "actual_missing": actual.get("missing") if actual else None,
-            "code_passed": code_passed,
-            "code_failures": [item["check"] for item in checks if not item["passed"]],
-            "judgement_required": judgement_required,
-            "judgement_status": "pending" if judgement_required else "not_required",
-            "judge_input_sha256": judge_hash,
-            "passed": None if judgement_required else code_passed,
-            "turns": result["turns"], "prompt_tokens": result["prompt_tokens"],
-            "completion_tokens": result["completion_tokens"], "cost_usd": result["cost_usd"],
-            "stopped_early": result["stopped_early"],
-            "tool_trace": [call["name"] for call in calls],
-            "trace_file": f"traces/{trace_name}",
-        })
+        row, queue_item = trial_row(
+            case=case, trial=trial, expected=expected, result=result,
+            records=records, fixtures=fixtures, metadata=metadata,
+        )
+        rows.append(row)
+        if queue_item is not None:
+            queue.append(queue_item)
 
     write_jsonl(run_dir / "trials.jsonl", rows)
     write_jsonl(run_dir / "judgement_queue.jsonl", queue)
@@ -548,6 +648,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--model", help="Model id; register its price in src/config.py")
     result.add_argument("--prompt-version", default="v2-final")
     result.add_argument("--output-dir", default=str(EVAL_DIR / "results"))
+    result.add_argument("--resume-dir", type=Path,
+                        help="Existing interrupted run directory; reuses its traces and runs only missing trials")
     result.add_argument("--dry-run", action="store_true", help="Validate and print counts only")
     result.add_argument("--allow-live", action="store_true",
                         help="Explicit confirmation that a paid live battery may run")
