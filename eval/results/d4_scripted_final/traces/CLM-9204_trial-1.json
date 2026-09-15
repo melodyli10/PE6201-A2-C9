@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9204",
@@ -35,7 +35,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.904703+00:00",
+      "ts": "2026-09-15T08:08:21.609988+00:00",
       "case_id": "CLM-9204",
       "decision": "approve_in_principle",
       "reason": "Policy POL-4102 active to 2026-12-31. Hospital H-207 on panel. 1 of 1 lines payable; 0 excluded. Approved total 599 against 600 remaining on the annual limit.",
@@ -170,7 +170,7 @@
         "content": "Fetch claim CLM-9204.",
         "tool_calls": [
           {
-            "id": "call_efeaf1cbd8fd",
+            "id": "call_c3a24ca2d64f",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -181,7 +181,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_efeaf1cbd8fd",
+        "tool_call_id": "call_c3a24ca2d64f",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9204\", \"member_id\": \"M-3390\", \"hospital_id\": \"H-207\", \"date_of_service\": \"2026-10-22\", \"narrative\": \"Routine outpatient consultation with the itemised bill attached.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 599}]}"
       },
@@ -190,7 +190,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_ff8c89102b25",
+            "id": "call_74088d572048",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -198,7 +198,7 @@
             }
           },
           {
-            "id": "call_c2df94216cd8",
+            "id": "call_80e356e930a3",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -206,7 +206,7 @@
             }
           },
           {
-            "id": "call_b630f764f047",
+            "id": "call_b2a09387301d",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -217,19 +217,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_ff8c89102b25",
+        "tool_call_id": "call_74088d572048",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-4102\", \"product\": \"Shield Basic\", \"status\": \"active\", \"start_date\": \"2026-01-01\", \"end_date\": \"2026-12-31\", \"annual_limit\": 6000, \"used_to_date\": 5400, \"exclusions\": [{\"code\": \"15823\", \"rule\": \"EX-14 cosmetic dermatology\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c2df94216cd8",
+        "tool_call_id": "call_80e356e930a3",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-207\", \"panel\": true, \"name\": \"Mount Elizabeth East\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_b630f764f047",
+        "tool_call_id": "call_b2a09387301d",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -238,7 +238,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_c3661df8a30c",
+            "id": "call_a40a9ca53a31",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -249,7 +249,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c3661df8a30c",
+        "tool_call_id": "call_a40a9ca53a31",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
@@ -258,7 +258,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_03e8db1c8cb8",
+            "id": "call_9d4a940570e5",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -269,7 +269,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_03e8db1c8cb8",
+        "tool_call_id": "call_9d4a940570e5",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9204\""
       }

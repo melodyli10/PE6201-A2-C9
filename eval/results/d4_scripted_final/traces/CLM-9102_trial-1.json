@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9102",
@@ -36,7 +36,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.885384+00:00",
+      "ts": "2026-09-15T08:08:21.556811+00:00",
       "case_id": "CLM-9102",
       "decision": "approve_in_principle",
       "reason": "Policy POL-8001 active to 2027-06-30. Hospital H-114 on panel. 1 of 2 lines payable; 1 excluded. Approved total 180 against 7500 remaining on the annual limit.",
@@ -189,7 +189,7 @@
         "content": "Fetch claim CLM-9102.",
         "tool_calls": [
           {
-            "id": "call_d9f928478324",
+            "id": "call_997def8011ac",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -200,7 +200,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_d9f928478324",
+        "tool_call_id": "call_997def8011ac",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9102\", \"member_id\": \"M-7001\", \"hospital_id\": \"H-114\", \"date_of_service\": \"2026-09-22\", \"narrative\": \"Reviewed by a neurologist after several weeks of headaches and intermittent blurred vision. The consultation and brain MRI were completed during the same hospital visit.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 180}, {\"code\": \"70553\", \"amount\": 900}]}"
       },
@@ -209,7 +209,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_16d755adafa9",
+            "id": "call_ddc4f60c1456",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -217,7 +217,7 @@
             }
           },
           {
-            "id": "call_9f3287181e4e",
+            "id": "call_5d488fa550de",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -225,7 +225,7 @@
             }
           },
           {
-            "id": "call_e461e687621f",
+            "id": "call_089b855a5380",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -236,19 +236,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_16d755adafa9",
+        "tool_call_id": "call_ddc4f60c1456",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-8001\", \"product\": \"Shield Select\", \"status\": \"active\", \"start_date\": \"2026-07-01\", \"end_date\": \"2027-06-30\", \"annual_limit\": 10000, \"used_to_date\": 2500, \"exclusions\": [{\"code\": \"70553\", \"rule\": \"EX-22 advanced imaging not covered\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_9f3287181e4e",
+        "tool_call_id": "call_5d488fa550de",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-114\", \"panel\": true, \"name\": \"Riverside General\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_e461e687621f",
+        "tool_call_id": "call_089b855a5380",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -257,7 +257,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_3810319a7767",
+            "id": "call_61fd59c029f6",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -265,7 +265,7 @@
             }
           },
           {
-            "id": "call_5a177a76432d",
+            "id": "call_b650c250c03e",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -276,13 +276,13 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_3810319a7767",
+        "tool_call_id": "call_61fd59c029f6",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_5a177a76432d",
+        "tool_call_id": "call_b650c250c03e",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"70553\", \"covered\": false, \"exclusion_rule\": \"EX-22 advanced imaging not covered\", \"requires_preauth\": false}"
       },
@@ -291,7 +291,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_5e56a2033c5f",
+            "id": "call_fb484e7ac1c3",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -302,7 +302,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_5e56a2033c5f",
+        "tool_call_id": "call_fb484e7ac1c3",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9102\""
       }
