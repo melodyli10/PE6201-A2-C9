@@ -87,6 +87,10 @@ python3 -m eval.harness \
 
 Expected trial count per live model: 65
 
+### Cross-platform hash note
+
+The Gemini run used the same committed `v2-final` evaluation content, 35-case set and 65-trial battery as the other final live-model runs. Its raw dataset and judge-prompt hashes differed because the run was executed on Windows with CRLF line endings. After normalising CRLF to LF, both hashes matched the reference run. No evaluation content was changed.
+
 ## Grading
 
 The harness uses mixed grading:
