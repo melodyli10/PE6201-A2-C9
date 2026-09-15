@@ -179,7 +179,7 @@ break-even is an economic threshold, not a safety clearance.
 
 | Control | Final value | Evidence / rationale |
 |---|---:|---|
-| Step cap | 10 turns | `src/config.py` sets 10; the selected Mistral and Qwen batteries reached but never exceeded 10, so this is a proven hard stop rather than an untested lower value. |
+| Step cap | 10 turns | `src/config.py` sets 10. Across the selected 55 Mistral runs, median turns were 4, the worst legitimate run used 10, and 1/55 runs reached the cap (distribution: 19 at 3 turns, 22 at 4, 13 at 5, 1 at 10). This makes 10 a measured hard stop rather than an arbitrary round number. |
 | Per-claim API budget | USD 1.00 | `src/config.py` and D3 guardrail test. The highest observed selected-trial provider charge was Gemini's USD 0.058585, leaving a 17.1× margin; the budget test blocks an over-budget write. |
 | Monthly per-user API budget | USD 1.00 | Deployment policy cap. It is intentionally on API spend, not human fallback allocation, and covers at least 17 runs at the observed worst API charge. Enforce it before starting a new user run. |
 
