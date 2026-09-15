@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "run_id": "20260915T051830Z_live_deepseek-deepseek-chat",
+    "suite_id": "d4-team-v1",
+    "backend": "live",
+    "model_id": "deepseek/deepseek-chat",
+    "configured_model": "deepseek/deepseek-chat",
+    "prompt_version": "v2-final",
+    "run_date_utc": "2026-09-15T05:18:30.274286+00:00",
+    "git_commit": "c44dcbee221f94bef10ee1e92c0d5633f075a39c",
+    "dataset_sha256": "2f855b0c2431c054aafca4b8cbe0445e71fc187488d9470ec920819a1c92eeaf",
+    "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
+    "judge_prompt": "eval/judge_prompt.md",
+    "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
+    "trial_count": 65
+  },
+  "cases": 35,
+  "negative_cases": 10,
+  "overall": {
+    "trials": 65,
+    "code_passed": 8,
+    "code_pass_rate": 0.1231,
+    "final_graded": 46,
+    "final_passed": 7,
+    "graded_only_pass_rate": 0.1522,
+    "final_pass_rate": null,
+    "judgement_pending": 19
+  },
+  "ordinary": {
+    "trials": 25,
+    "code_passed": 7,
+    "code_pass_rate": 0.28,
+    "final_graded": 22,
+    "final_passed": 7,
+    "graded_only_pass_rate": 0.3182,
+    "final_pass_rate": null,
+    "judgement_pending": 3
+  },
+  "negative": {
+    "trials": 40,
+    "code_passed": 1,
+    "code_pass_rate": 0.025,
+    "final_graded": 24,
+    "final_passed": 0,
+    "graded_only_pass_rate": 0.0,
+    "final_pass_rate": null,
+    "judgement_pending": 16
+  },
+  "average_turns": 3.985,
+  "total_prompt_tokens": 707502,
+  "total_completion_tokens": 26674,
+  "total_cost_usd": 0.209558
+}
