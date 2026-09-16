@@ -177,41 +177,41 @@
     {
       "model_id": "mistralai/mistral-small-3.2-24b-instruct",
       "prompt_version": "v1",
-      "source": "origin/main:eval/results/20260915T053834Z_live_mistralai-mistral-small-3.2-24b_V1/trials_judged.jsonl",
+      "source": "origin/main:eval/results/20260916T045705Z_live_mistralai-mistral-small-3.2-24b-instruct/trials_judged.jsonl",
       "trials": 55,
-      "passed": 3,
-      "ordinary_passed": 3,
+      "passed": 1,
+      "ordinary_passed": 1,
       "negative_passed": 0,
-      "pass_rate": 0.054545,
-      "prompt_tokens": 497311,
-      "completion_tokens": 45055,
-      "token_cost_total_usd": 0.046309,
-      "layer_1_per_task_usd": 0.000842,
-      "layer_2_per_task_usd": 7.185455,
-      "all_in_per_task_usd": 7.186297,
-      "monthly_usd": 57490.37,
+      "pass_rate": 0.018182,
+      "prompt_tokens": 440389,
+      "completion_tokens": 69811,
+      "token_cost_total_usd": 0.046991,
+      "layer_1_per_task_usd": 0.000854,
+      "layer_2_per_task_usd": 7.461818,
+      "all_in_per_task_usd": 7.462673,
+      "monthly_usd": 59701.38,
       "sensitivity_plus_minus_10pp": [
         {
           "pass_rate": 0,
-          "cost_per_task_usd": 7.600842,
-          "monthly_usd": 60806.74
+          "cost_per_task_usd": 7.600854,
+          "monthly_usd": 60806.84
         },
         {
-          "pass_rate": 0.054545,
-          "cost_per_task_usd": 7.186297,
-          "monthly_usd": 57490.37
+          "pass_rate": 0.018182,
+          "cost_per_task_usd": 7.462673,
+          "monthly_usd": 59701.38
         },
         {
-          "pass_rate": 0.154545,
-          "cost_per_task_usd": 6.426297,
-          "monthly_usd": 51410.37
+          "pass_rate": 0.118182,
+          "cost_per_task_usd": 6.702673,
+          "monthly_usd": 53621.38
         }
       ]
     }
   ],
   "mistral_v1_to_v2": {
-    "pass_rate_gain_percentage_points": 20.0,
-    "all_in_cost_saved_per_task_usd": 1.519897
+    "pass_rate_gain_percentage_points": 23.64,
+    "all_in_cost_saved_per_task_usd": 1.796273
   },
   "mistral_vs_gpt_break_even": {
     "cheap_token_only_usd": 0.000945,

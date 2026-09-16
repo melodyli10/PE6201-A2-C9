@@ -159,12 +159,13 @@ provider-side rounding in per-trial `cost_usd` fields.
 | Qwen3.6 35B A3B | Qwen / cheap | 14/55 | 25.45% | USD 0.001861 | USD 5.667316 | USD 45,338.53 | historical run `a892594b:eval/results/20260915T012109Z_live_qwen-qwen3.6-35b-a3b/trials_judged.jsonl` |
 | DeepSeek Chat | DeepSeek / cheap | 8/55 | 14.55% | USD 0.003240 | USD 6.497786 | USD 51,982.29 | `feature4/lyf:eval/results/20260915T051830Z_live_deepseek-deepseek-chat/D5b_deepseek_submission.json` |
 
-The sixth member's V1 pass holds the Mistral model fixed on the same 55
-case/trial IDs: 3/55 passed (5.45%), L1 USD 0.000842/task, all-in USD
-7.186297/task and USD 57,490.37/month in the same prototype baseline. V2
-improved the outcome pass rate by 20.00 percentage points and reduced expected
-cost by USD 1.519897/task. This is the paired prompt-version comparison, not
-an additional V2 model.
+The sixth member's corrected V1 pass holds the Mistral model fixed on the same
+55 case/trial IDs: 1/55 passed (1.82%), L1 USD 0.000854/task, all-in USD
+7.462673/task and USD 59,701.38/month in the same prototype baseline. V2
+improved the outcome pass rate by 23.64 percentage points and reduced expected
+cost by USD 1.796273/task. This is the paired prompt-version comparison, not
+an additional V2 model. The corrected source is the 16 September run on
+`origin/main`; it replaces the superseded 15 September V1 result.
 
 Price sources recorded at run time are OpenRouter model pages: Mistral
 `mistralai/mistral-small-3.2-24b-instruct` (USD 0.075/0.20 per million input/output
@@ -205,7 +206,7 @@ break-even is an economic threshold, not a safety clearance.
 | B — tool block size | 943 tokens, eight exposed schemas | 841 tokens, seven V2-only schemas | -102 tokens/turn (-10.82%) | `cost_model/ledger_measurements.json`; tiktoken 0.14.0 `o200k_base` counts the compact serialized schema block before (`8f8da38`) and after the code cut. The old function remains for experiments but is no longer exposed to the final V2 model. |
 | T — dependency order | 6 turns, 13,180 billed prompt tokens | 4 turns, 9,424 billed prompt tokens | -2 turns (-33.3%); -3,756 tokens (-28.5%) | D2(c) live spot check on `CLM-8850`: same decision. The broader 15-case scripted paired comparison gives 96→58 turns and ~105,044→59,878 *estimated* input tokens, with all outcomes/triggers unchanged. |
 | D — pre-authorisation observation | 38.25 tokens/call, V1 average | 12.25 tokens/call, V2 average | -26.00 tokens/call (-67.97%) | `cost_model/ledger_measurements.json`, same tokenizer/serialization on four valid, expired, missing and invalid-date outputs. Both versions retained 15/15 shipped decisions and 3/3 malformed-date guardrails. |
-| P — measured success | Mistral V1: 3/55 (5.45%); USD 7.186297/task | Mistral V2: 14/55 (25.45%); USD 5.666400/task | +20.00 percentage points; -USD 1.519897/task | `cost_model/d6_results.json`; same model and 55 case/trial IDs, with ordinary trial 1 and negative trials 1--3. V2 passed 6/30 negative trials; V1 passed 0/30. |
+| P — measured success | Corrected Mistral V1: 1/55 (1.82%); USD 7.462673/task | Mistral V2: 14/55 (25.45%); USD 5.666400/task | +23.64 percentage points; -USD 1.796273/task | `cost_model/d6_results.json`; same model and 55 case/trial IDs, with ordinary trial 1 and negative trials 1--3. V2 passed 6/30 negative trials; V1 passed 0/30. |
 
 The tokenizer counts in B and D are local measurements of exactly the payloads
 sent/returned under one explicit encoding, not provider-billed usage. The B
@@ -271,8 +272,8 @@ locally counted tokens per turn (B). In a live spot check, batching independent
 tools reduced turns 6→4 and billed prompt tokens 13,180→9,424 (T); the
 15-case scripted comparison preserved every outcome. The V2 pre-authorisation
 observation averaged 12.25 locally counted tokens against V1's 38.25 (D).
-On the same Mistral and 55 case/trial IDs, V1 passed 3/55 and cost USD
-7.186297 per task, versus V2's 14/55 and USD 5.666400 (P). Success-rate
+On the same Mistral and 55 case/trial IDs, corrected V1 passed 1/55 and cost
+USD 7.462673 per task, versus V2's 14/55 and USD 5.666400 (P). Success-rate
 improvement outweighed token savings because a failure costs USD 7.60.
 
 Five V2 models were costed. GPT-4.1 Mini had the lowest expected cost. For

@@ -43,7 +43,7 @@
     {
       "model_id": "mistralai/mistral-small-3.2-24b-instruct",
       "prompt_version": "v1",
-      "source": "origin/main:eval/results/20260915T053834Z_live_mistralai-mistral-small-3.2-24b_V1/trials_judged.jsonl",
+      "source": "origin/main:eval/results/20260916T045705Z_live_mistralai-mistral-small-3.2-24b-instruct/trials_judged.jsonl",
       "case_count": 35,
       "trial_count": 55,
       "aggregates_match": true
