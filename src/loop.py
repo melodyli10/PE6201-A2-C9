@@ -81,6 +81,19 @@ def _backend_next_turn(messages: list[dict], parallel: bool = True) -> dict:
     raise ValueError(f"unknown BACKEND {config.BACKEND!r}")
 
 
+def _remember_action(action_key: str, seen_actions: set[str]) -> bool:
+    """Return True for a duplicate; otherwise remember the action.
+
+    Keeping this guard in one small function makes the D7 deletion experiment
+    exact: the reproducer replaces only this membership check while exercising
+    the same loop, tools, caps and decision gate as the working agent.
+    """
+    if action_key in seen_actions:
+        return True
+    seen_actions.add(action_key)
+    return False
+
+
 def run_case(
     claim_id: str,
     parallel: bool = True,
@@ -148,10 +161,9 @@ def run_case(
                 inspect.signature(TOOL_FUNCTIONS[name]).bind(**arguments)
                 action_key = json.dumps({"name": name, "arguments": arguments}, sort_keys=True)
 
-                if action_key in seen_actions:
+                if _remember_action(action_key, seen_actions):
                     result = {"blocked": True, "reason": "duplicate action"}
                 else:
-                    seen_actions.add(action_key)
                     if name == "issue_decision_letter":
                         pending_decision = dict(arguments)
                         try:

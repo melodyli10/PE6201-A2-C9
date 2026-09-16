@@ -136,3 +136,21 @@ the complete interpretation and a report-ready section 4 are in
 `cost_model/PE6201_A2_D6_Cost_to_Serve.ipynb` adapts the supplied Class 5
 cost-to-serve notebook to the same measured inputs. None of these commands
 sends a live request or requires an OpenRouter key.
+
+## Reproduce D7's two failures
+
+D7 uses the production loop and tools with deterministic scripted fixtures.
+It makes no network request and needs no API key:
+
+```bash
+python3 -m failures.run_d7
+```
+
+The runner performs two controlled deletion experiments: action
+de-duplication removed/restored for the required loop failure, and the
+decision tool's five-value trigger enum removed/restored for the interface
+failure. It also runs the complete 105-trial D4 scripted plan to report the
+turn distribution and check that the 10-turn cap truncates no legitimate run.
+Raw messages, decisions, token/cost instrumentation and before/after scores
+are written to `failures/d7_results.json`; the tables and report-ready section
+5 are in `supporting_documents/D7_two_reproduced_failures.md`.
