@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9305",
@@ -37,7 +37,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.924770+00:00",
+      "ts": "2026-09-15T08:08:21.657112+00:00",
       "case_id": "CLM-9305",
       "decision": "approve_in_principle",
       "reason": "Policy POL-6001 active to 2027-05-31. Hospital H-207 on panel. 3 of 3 lines payable; 0 excluded. Approved total 770 against 15000 remaining on the annual limit.",
@@ -202,7 +202,7 @@
         "content": "Fetch claim CLM-9305.",
         "tool_calls": [
           {
-            "id": "call_abe2b84eff99",
+            "id": "call_6d100dee9bf9",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -213,7 +213,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_abe2b84eff99",
+        "tool_call_id": "call_6d100dee9bf9",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9305\", \"member_id\": \"M-5502\", \"hospital_id\": \"H-207\", \"date_of_service\": \"2026-10-26\", \"narrative\": \"I attended an outpatient consultation and had routine blood testing and brain imaging during the same visit.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 180}, {\"code\": \"80053\", \"amount\": 90}, {\"code\": \"70553\", \"amount\": 500}]}"
       },
@@ -222,7 +222,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_379eefac8cc8",
+            "id": "call_2f0f3fbf7a07",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -230,7 +230,7 @@
             }
           },
           {
-            "id": "call_515a2fc0c5dc",
+            "id": "call_d2efcc531b83",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -238,7 +238,7 @@
             }
           },
           {
-            "id": "call_f22a63a809d3",
+            "id": "call_0385f6c8fb9d",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -249,19 +249,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_379eefac8cc8",
+        "tool_call_id": "call_2f0f3fbf7a07",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-6001\", \"product\": \"Shield Plus\", \"status\": \"active\", \"start_date\": \"2026-06-01\", \"end_date\": \"2027-05-31\", \"annual_limit\": 15000, \"used_to_date\": 0, \"exclusions\": []}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_515a2fc0c5dc",
+        "tool_call_id": "call_d2efcc531b83",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-207\", \"panel\": true, \"name\": \"Mount Elizabeth East\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_f22a63a809d3",
+        "tool_call_id": "call_0385f6c8fb9d",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -270,7 +270,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_b6fbfeb7bb76",
+            "id": "call_83f236a1a7e2",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -278,7 +278,7 @@
             }
           },
           {
-            "id": "call_181f6c6a9ce3",
+            "id": "call_c14ee158babf",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -286,7 +286,7 @@
             }
           },
           {
-            "id": "call_c32417e80912",
+            "id": "call_eacfba3c2eff",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -297,19 +297,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_b6fbfeb7bb76",
+        "tool_call_id": "call_83f236a1a7e2",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_181f6c6a9ce3",
+        "tool_call_id": "call_c14ee158babf",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"80053\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c32417e80912",
+        "tool_call_id": "call_eacfba3c2eff",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"70553\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
@@ -318,7 +318,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_ddd3ecda655f",
+            "id": "call_8ba9afc15a4e",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -329,7 +329,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_ddd3ecda655f",
+        "tool_call_id": "call_8ba9afc15a4e",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9305\""
       }

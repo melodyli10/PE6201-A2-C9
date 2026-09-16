@@ -5,7 +5,7 @@
     "real_api_cost_usd": 0.0,
     "token_method": "ceil(compact JSON UTF-8 bytes / 4), counted per scripted turn",
     "pricing_model_for_estimated_cost": "mistralai/mistral-small-3.2-24b-instruct",
-    "git_commit_before_d7_commit": "2edaaba79f80fad069fbb0b63e205cd0db3297cf"
+    "source_git_commit": "e3b6ed73d17fcecb6d02342c180adcd9bd7a8a88"
   },
   "whole_evaluation_set": {
     "trials": 105,

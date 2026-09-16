@@ -266,7 +266,7 @@ def build_results() -> dict:
             "real_api_cost_usd": 0.0,
             "token_method": "ceil(compact JSON UTF-8 bytes / 4), counted per scripted turn",
             "pricing_model_for_estimated_cost": MODEL,
-            "git_commit_before_d7_commit": commit,
+            "source_git_commit": commit,
         },
         "whole_evaluation_set": _whole_set_distribution(),
         "failure_1_loop_control": {

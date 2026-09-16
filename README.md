@@ -87,6 +87,10 @@ python3 -m eval.harness \
 
 Expected trial count per live model: 65
 
+### Cross-platform hash note
+
+The Gemini run used the same committed `v2-final` evaluation content, 35-case set and 65-trial battery as the other final live-model runs. Its raw dataset and judge-prompt hashes differed because the run was executed on Windows with CRLF line endings. After normalising CRLF to LF, both hashes matched the reference run. No evaluation content was changed.
+
 ## Grading
 
 The harness uses mixed grading:
@@ -96,7 +100,6 @@ The harness uses mixed grading:
 - Strict diagnostics report tool evidence, gated-action and loop behaviour without redefining the outcome pass rate.
 - Judgement checks for selected cases where reason and evidence quality require review.
 
-Earlier 55-trial runs are preserved as diagnostic history only.
 
 Final D4 and D5 evidence should use the current 105-trial D4 plan and 65-trial live-model battery.
 
