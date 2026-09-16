@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9107",
@@ -33,7 +33,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.968436+00:00",
+      "ts": "2026-09-15T08:08:21.757766+00:00",
       "case_id": "CLM-9107",
       "decision": "approve_in_principle",
       "reason": "Policy POL-4102 active to 2026-12-31. Hospital H-207 on panel. 2 of 2 lines payable; 0 excluded. Approved total 270 against 600 remaining on the annual limit.",
@@ -183,7 +183,7 @@
         "content": "Fetch claim CLM-9107.",
         "tool_calls": [
           {
-            "id": "call_ab32f03977f7",
+            "id": "call_eb90a76580dc",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -194,7 +194,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_ab32f03977f7",
+        "tool_call_id": "call_eb90a76580dc",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9107\", \"member_id\": \"M-3390\", \"hospital_id\": \"H-207\", \"date_of_service\": \"2026-09-25\", \"narrative\": \"Consultation and a blood panel done at the same visit.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"99213\", \"amount\": 180}, {\"code\": \"80053\", \"amount\": 90}]}"
       },
@@ -203,7 +203,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_c40c672163d9",
+            "id": "call_e3533b3474fc",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -211,7 +211,7 @@
             }
           },
           {
-            "id": "call_7f71aaf32a6d",
+            "id": "call_3906e4fb44be",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -219,7 +219,7 @@
             }
           },
           {
-            "id": "call_03d5f055d12d",
+            "id": "call_b1882369fbe9",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -230,19 +230,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c40c672163d9",
+        "tool_call_id": "call_e3533b3474fc",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-4102\", \"product\": \"Shield Basic\", \"status\": \"active\", \"start_date\": \"2026-01-01\", \"end_date\": \"2026-12-31\", \"annual_limit\": 6000, \"used_to_date\": 5400, \"exclusions\": [{\"code\": \"15823\", \"rule\": \"EX-14 cosmetic dermatology\"}]}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_7f71aaf32a6d",
+        "tool_call_id": "call_3906e4fb44be",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-207\", \"panel\": true, \"name\": \"Mount Elizabeth East\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_03d5f055d12d",
+        "tool_call_id": "call_b1882369fbe9",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -251,7 +251,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_2eb974786e2e",
+            "id": "call_6c204fd583df",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -259,7 +259,7 @@
             }
           },
           {
-            "id": "call_c56f5496b91d",
+            "id": "call_55b01261cb11",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -270,13 +270,13 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_2eb974786e2e",
+        "tool_call_id": "call_6c204fd583df",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c56f5496b91d",
+        "tool_call_id": "call_55b01261cb11",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"80053\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
@@ -285,7 +285,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_6825dea5108e",
+            "id": "call_b1ce061d622e",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -296,7 +296,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_6825dea5108e",
+        "tool_call_id": "call_b1ce061d622e",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9107\""
       }
