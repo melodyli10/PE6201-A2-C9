@@ -7,6 +7,13 @@ from src import data_store
 def check_coverage(policy_id: str, procedure_code: str) -> dict:
     policy = data_store.find_policy(policy_id)
     if policy is None:
+        # D7 interface recovery: the claim exposes member_id before it exposes
+        # policy_id.  Accept that trusted fixture identifier rather than turning a
+        # recoverable join mismatch into a coverage failure.
+        member = data_store.find_member(policy_id)
+        if member is not None:
+            policy = data_store.find_policy(member["policy_id"])
+    if policy is None:
         return {"error": f"no policy found for policy_id={policy_id!r}"}
     procedure = data_store.find_procedure(procedure_code)
     if procedure is None:

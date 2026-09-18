@@ -19,7 +19,11 @@ def _load_dotenv() -> None:
             os.environ.setdefault(key.strip(), value.strip())
 
 
-_load_dotenv()
+# Offline reproducibility checks can opt out explicitly.  This keeps their
+# execution independent of any local credential file while preserving the
+# ordinary developer workflow by default.
+if os.environ.get("A2_SKIP_DOTENV") != "1":
+    _load_dotenv()
 
 # "scripted" (default, no network/key) or "live" (real OpenRouter call).
 BACKEND = os.environ.get("A2_BACKEND", "scripted")

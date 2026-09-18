@@ -86,6 +86,7 @@ def run_case(
     parallel: bool = True,
     *,
     operator_confirm: Callable[[dict], bool] | None = None,
+    deduplicate_actions: bool = True,
 ) -> dict:
     """Run one claim. Confirmation is supplied only by trusted calling code.
 
@@ -148,8 +149,9 @@ def run_case(
                 inspect.signature(TOOL_FUNCTIONS[name]).bind(**arguments)
                 action_key = json.dumps({"name": name, "arguments": arguments}, sort_keys=True)
 
-                if action_key in seen_actions:
+                if deduplicate_actions and action_key in seen_actions:
                     result = {"blocked": True, "reason": "duplicate action"}
+                    stopped = "duplicate action rejected"
                 else:
                     seen_actions.add(action_key)
                     if name == "issue_decision_letter":
