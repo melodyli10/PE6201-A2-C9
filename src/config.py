@@ -19,11 +19,7 @@ def _load_dotenv() -> None:
             os.environ.setdefault(key.strip(), value.strip())
 
 
-# Offline reproducibility checks can opt out explicitly.  This keeps their
-# execution independent of any local credential file while preserving the
-# ordinary developer workflow by default.
-if os.environ.get("A2_SKIP_DOTENV") != "1":
-    _load_dotenv()
+_load_dotenv()
 
 # "scripted" (default, no network/key) or "live" (real OpenRouter call).
 BACKEND = os.environ.get("A2_BACKEND", "scripted")
@@ -42,6 +38,7 @@ PRICE_PER_MILLION = {
     # Keep the D5(b) run metadata's price-source URL beside the final result table.
     "mistralai/mistral-small-3.2-24b-instruct": (0.075, 0.20),
     "openai/gpt-4.1-mini": (0.40, 1.60),
+    "qwen/qwen3.6-35b-a3b": (0.05, 0.70),
 }
 
 
@@ -55,7 +52,9 @@ def price_for(model: str) -> tuple[float, float]:
 
 # Per-run limits. The loop checks exhaustion before the next request and overspend
 # before executing tools. A sent live request can still exceed its remaining budget.
-BUDGET_CEILING_USD = 1.00
+# Worst selected live trial was USD 0.058585 (Gemini). USD 0.10 leaves about
+# 70% headroom without permitting a tenfold larger claim-level API bill.
+BUDGET_CEILING_USD = 0.10
 STEP_CAP = 10
 # D3 autonomy setting for the irreversible decision-write action.
 AUTONOMY = "confirm"

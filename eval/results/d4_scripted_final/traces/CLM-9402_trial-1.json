@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9402",
@@ -38,7 +38,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.933334+00:00",
+      "ts": "2026-09-15T08:08:21.678209+00:00",
       "case_id": "CLM-9402",
       "decision": "approve_in_principle",
       "reason": "Policy POL-6001 active to 2027-05-31. Hospital H-114 on panel. 3 of 3 lines payable; 0 excluded. Approved total 3320 against 15000 remaining on the annual limit. Valid pre-authorisations: PA-5702 valid for line 27447.",
@@ -207,7 +207,7 @@
         "content": "Fetch claim CLM-9402.",
         "tool_calls": [
           {
-            "id": "call_a4c05a1beb54",
+            "id": "call_e04857681dee",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -218,7 +218,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_a4c05a1beb54",
+        "tool_call_id": "call_e04857681dee",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9402\", \"member_id\": \"M-5502\", \"hospital_id\": \"H-114\", \"date_of_service\": \"2026-11-15\", \"narrative\": \"My authorised total knee replacement went ahead as planned. The same admission also included blood tests and a follow-up consultation before discharge.\", \"documents\": [\"itemised_bill\", \"discharge_summary\"], \"lines\": [{\"code\": \"27447\", \"amount\": 3000}, {\"code\": \"80053\", \"amount\": 120}, {\"code\": \"99213\", \"amount\": 200}]}"
       },
@@ -227,7 +227,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_01f1d02b28ec",
+            "id": "call_7b5fb39cae26",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -235,7 +235,7 @@
             }
           },
           {
-            "id": "call_692233c9df6d",
+            "id": "call_a2771e3717d1",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -243,7 +243,7 @@
             }
           },
           {
-            "id": "call_3b01f727d1af",
+            "id": "call_bfb983c2f6bf",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -254,19 +254,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_01f1d02b28ec",
+        "tool_call_id": "call_7b5fb39cae26",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-6001\", \"product\": \"Shield Plus\", \"status\": \"active\", \"start_date\": \"2026-06-01\", \"end_date\": \"2027-05-31\", \"annual_limit\": 15000, \"used_to_date\": 0, \"exclusions\": []}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_692233c9df6d",
+        "tool_call_id": "call_a2771e3717d1",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-114\", \"panel\": true, \"name\": \"Riverside General\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_3b01f727d1af",
+        "tool_call_id": "call_bfb983c2f6bf",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -275,7 +275,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_09339915541d",
+            "id": "call_f1b20ddfe427",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -283,7 +283,7 @@
             }
           },
           {
-            "id": "call_908a1bd5169f",
+            "id": "call_f9b4f414e325",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -291,7 +291,7 @@
             }
           },
           {
-            "id": "call_5aed7c7be4ab",
+            "id": "call_13cd1b25123c",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -302,19 +302,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_09339915541d",
+        "tool_call_id": "call_f1b20ddfe427",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"27447\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": true}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_908a1bd5169f",
+        "tool_call_id": "call_f9b4f414e325",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"80053\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_5aed7c7be4ab",
+        "tool_call_id": "call_13cd1b25123c",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"99213\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": false}"
       },
@@ -323,7 +323,7 @@
         "content": "Chase pre-authorisation for lines that require one.",
         "tool_calls": [
           {
-            "id": "call_2e8b94708ccf",
+            "id": "call_061f87d5a595",
             "type": "function",
             "function": {
               "name": "get_preauthorisation_v2",
@@ -334,7 +334,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_2e8b94708ccf",
+        "tool_call_id": "call_061f87d5a595",
         "name": "get_preauthorisation_v2",
         "content": "{\"status\": \"valid\", \"preauth_id\": \"PA-5702\"}"
       },
@@ -343,7 +343,7 @@
         "content": "Every line resolved; approving in principle.",
         "tool_calls": [
           {
-            "id": "call_dcb234f62dca",
+            "id": "call_bbee70db710a",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -354,7 +354,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_dcb234f62dca",
+        "tool_call_id": "call_bbee70db710a",
         "name": "issue_decision_letter",
         "content": "\"recorded: approve_in_principle on CLM-9402\""
       }

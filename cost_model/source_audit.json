@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "prompt_version": "v2-final",
+      "source": "eval/results/20260914T023002Z_live_mistralai-mistral-small-3.2-24b-instruct_d6-55-trials/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    },
+    {
+      "model_id": "openai/gpt-4.1-mini",
+      "prompt_version": "v2-final",
+      "source": "origin/main:eval/results/20260914T070612Z_live_openai-gpt-4.1-mini/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    },
+    {
+      "model_id": "google/gemini-2.5-pro",
+      "prompt_version": "v2-final",
+      "source": "origin/feature/D5-Gemini:eval/results/20260914T154843Z_live_google-gemini-2.5-pro/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    },
+    {
+      "model_id": "qwen/qwen3.6-35b-a3b",
+      "prompt_version": "v2-final",
+      "source": "origin/main:eval/results/20260915T012109Z_live_qwen-qwen3.6-35b-a3b/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    },
+    {
+      "model_id": "deepseek/deepseek-chat",
+      "prompt_version": "v2-final",
+      "source": "origin/feature4/lyf:eval/results/20260915T051830Z_live_deepseek-deepseek-chat/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    },
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "prompt_version": "v1",
+      "source": "origin/main:eval/results/20260916T045705Z_live_mistralai-mistral-small-3.2-24b-instruct/trials_judged.jsonl",
+      "case_count": 35,
+      "trial_count": 55,
+      "aggregates_match": true
+    }
+  ],
+  "mistral_v1_v2_case_trial_pairs_match": true
+}

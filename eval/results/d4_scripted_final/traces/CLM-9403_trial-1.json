@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "run_id": "20260913T164316Z_scripted_scripted-policy-v1",
+    "run_id": "20260915T080821Z_scripted_scripted-policy-v1",
     "suite_id": "d4-team-v1",
     "backend": "scripted",
     "model_id": "scripted-policy-v1",
     "configured_model": "nvidia/nemotron-3-super-120b-a12b:free",
     "prompt_version": "v2-final",
-    "run_date_utc": "2026-09-13T16:43:16.807884+00:00",
-    "git_commit": null,
+    "run_date_utc": "2026-09-15T08:08:21.501027+00:00",
+    "git_commit": "69bf3e4eb4d6ec256b3a4cf2a37d1790623c97e3",
     "dataset_sha256": "f735f16df6cd016ebbf716d1f412225d57767b6faa6ce8e6591e323e4ce05b38",
     "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
     "judge_prompt": "eval/judge_prompt.md",
     "judge_prompt_sha256": "4b3ecbc23cdcc8b5204601f56f5a3f01c1b184066f0def327b5545c6469ef849",
-    "trial_count": 55
+    "trial_count": 105
   },
   "case": {
     "case_id": "CLM-9403",
@@ -35,7 +35,7 @@
   },
   "decision_records": [
     {
-      "ts": "2026-09-13T16:43:16.935442+00:00",
+      "ts": "2026-09-15T08:08:21.685395+00:00",
       "case_id": "CLM-9403",
       "decision": "request_document",
       "reason": "Line 27447 requires discharge_summary, which is not among the attached documents.",
@@ -142,7 +142,7 @@
         "content": "Fetch claim CLM-9403.",
         "tool_calls": [
           {
-            "id": "call_86f8aa369e64",
+            "id": "call_5fb919270eab",
             "type": "function",
             "function": {
               "name": "get_claim",
@@ -153,7 +153,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_86f8aa369e64",
+        "tool_call_id": "call_5fb919270eab",
         "name": "get_claim",
         "content": "{\"claim_id\": \"CLM-9403\", \"member_id\": \"M-5502\", \"hospital_id\": \"H-207\", \"date_of_service\": \"2026-11-16\", \"narrative\": \"The total knee replacement was approved in advance. I have attached the itemised bill, but the discharge paperwork is still being prepared by the ward.\", \"documents\": [\"itemised_bill\"], \"lines\": [{\"code\": \"27447\", \"amount\": 2800}]}"
       },
@@ -162,7 +162,7 @@
         "content": "Check policy, hospital panel status and prior decisions.",
         "tool_calls": [
           {
-            "id": "call_103e56e12081",
+            "id": "call_5592c42d60a5",
             "type": "function",
             "function": {
               "name": "lookup_policy",
@@ -170,7 +170,7 @@
             }
           },
           {
-            "id": "call_58c21ba6bdf3",
+            "id": "call_c996e29ce04b",
             "type": "function",
             "function": {
               "name": "get_hospital_status",
@@ -178,7 +178,7 @@
             }
           },
           {
-            "id": "call_c3ba152f0ae2",
+            "id": "call_a07c862382f4",
             "type": "function",
             "function": {
               "name": "check_duplicate_claim",
@@ -189,19 +189,19 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_103e56e12081",
+        "tool_call_id": "call_5592c42d60a5",
         "name": "lookup_policy",
         "content": "{\"policy_id\": \"POL-6001\", \"product\": \"Shield Plus\", \"status\": \"active\", \"start_date\": \"2026-06-01\", \"end_date\": \"2027-05-31\", \"annual_limit\": 15000, \"used_to_date\": 0, \"exclusions\": []}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_58c21ba6bdf3",
+        "tool_call_id": "call_c996e29ce04b",
         "name": "get_hospital_status",
         "content": "{\"hospital_id\": \"H-207\", \"panel\": true, \"name\": \"Mount Elizabeth East\"}"
       },
       {
         "role": "tool",
-        "tool_call_id": "call_c3ba152f0ae2",
+        "tool_call_id": "call_a07c862382f4",
         "name": "check_duplicate_claim",
         "content": "{\"duplicate\": false}"
       },
@@ -210,7 +210,7 @@
         "content": "Check coverage for every line.",
         "tool_calls": [
           {
-            "id": "call_cbb67b1b3ca6",
+            "id": "call_19a616533b86",
             "type": "function",
             "function": {
               "name": "check_coverage",
@@ -221,7 +221,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_cbb67b1b3ca6",
+        "tool_call_id": "call_19a616533b86",
         "name": "check_coverage",
         "content": "{\"procedure_code\": \"27447\", \"covered\": true, \"exclusion_rule\": null, \"requires_preauth\": true}"
       },
@@ -230,7 +230,7 @@
         "content": "Chase pre-authorisation for lines that require one.",
         "tool_calls": [
           {
-            "id": "call_de3c876ecb11",
+            "id": "call_9d653332e324",
             "type": "function",
             "function": {
               "name": "get_preauthorisation_v2",
@@ -241,7 +241,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_de3c876ecb11",
+        "tool_call_id": "call_9d653332e324",
         "name": "get_preauthorisation_v2",
         "content": "{\"status\": \"valid\", \"preauth_id\": \"PA-5702\"}"
       },
@@ -250,7 +250,7 @@
         "content": "Required document absent; requesting it.",
         "tool_calls": [
           {
-            "id": "call_21e4ff5aa6ae",
+            "id": "call_749ec22f1867",
             "type": "function",
             "function": {
               "name": "issue_decision_letter",
@@ -261,7 +261,7 @@
       },
       {
         "role": "tool",
-        "tool_call_id": "call_21e4ff5aa6ae",
+        "tool_call_id": "call_749ec22f1867",
         "name": "issue_decision_letter",
         "content": "\"recorded: request_document on CLM-9403\""
       }

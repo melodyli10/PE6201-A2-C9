@@ -1,0 +1,99 @@
+{
+  "method": {
+    "tokenizer": "tiktoken 0.14.0 / o200k_base",
+    "serialization": "json.dumps(ensure_ascii=False, separators=(',', ':'))",
+    "scope": "local token count of serialized schemas/observations; not API billing"
+  },
+  "B_tool_block": {
+    "before_commit": "8f8da38",
+    "before_tools": [
+      "get_claim",
+      "lookup_policy",
+      "check_coverage",
+      "get_preauthorisation",
+      "get_preauthorisation_v2",
+      "get_hospital_status",
+      "check_duplicate_claim",
+      "issue_decision_letter"
+    ],
+    "after_tools": [
+      "get_claim",
+      "lookup_policy",
+      "check_coverage",
+      "get_preauthorisation_v2",
+      "get_hospital_status",
+      "check_duplicate_claim",
+      "issue_decision_letter"
+    ],
+    "before_tokens": 943,
+    "after_tokens": 841,
+    "saved_tokens_per_turn": 102,
+    "saved_percent": 10.82
+  },
+  "D_preauthorisation_observation": {
+    "cases": [
+      {
+        "case": "valid",
+        "v1_tokens": 38,
+        "v2_tokens": 14,
+        "v1_payload": {
+          "found": true,
+          "valid": true,
+          "preauth_id": "PA-5521",
+          "valid_from": "2026-08-01",
+          "valid_to": "2026-10-31"
+        },
+        "v2_payload": {
+          "status": "valid",
+          "preauth_id": "PA-5521"
+        }
+      },
+      {
+        "case": "expired",
+        "v1_tokens": 66,
+        "v2_tokens": 24,
+        "v1_payload": {
+          "found": true,
+          "valid": false,
+          "preauth_id": "PA-5640",
+          "valid_from": "2026-03-01",
+          "valid_to": "2026-05-31",
+          "reason": "PA-5640 validity ended 2026-05-31, before date of service 2026-09-01"
+        },
+        "v2_payload": {
+          "status": "expired",
+          "preauth_id": "PA-5640",
+          "valid_to": "2026-05-31"
+        }
+      },
+      {
+        "case": "missing",
+        "v1_tokens": 31,
+        "v2_tokens": 5,
+        "v1_payload": {
+          "found": false,
+          "valid": false,
+          "reason": "no pre-authorisation on file for member 'M-9999', procedure '99999'"
+        },
+        "v2_payload": {
+          "status": "missing"
+        }
+      },
+      {
+        "case": "invalid_date",
+        "v1_tokens": 18,
+        "v2_tokens": 6,
+        "v1_payload": {
+          "error": "date_of_service must be a valid ISO date in YYYY-MM-DD format"
+        },
+        "v2_payload": {
+          "status": "invalid_date"
+        }
+      }
+    ],
+    "v1_total_tokens": 153,
+    "v2_total_tokens": 49,
+    "v1_average_tokens": 38.25,
+    "v2_average_tokens": 12.25
+  }
+}

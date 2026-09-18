@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "run_id": "20260916T045705Z_live_mistralai-mistral-small-3.2-24b-instruct",
+    "suite_id": "d4-team-v1",
+    "backend": "live",
+    "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+    "configured_model": "mistralai/mistral-small-3.2-24b-instruct",
+    "prompt_version": "v2-final",
+    "run_date_utc": "2026-09-16T04:57:05.133838+00:00",
+    "git_commit": "711a5ca55a3da64bde7500bbd458d30df0f152e0",
+    "dataset_sha256": "0aca973b29d987a1200d1fc131c02455738eb02494be85ea0036fe8b94fa7abe",
+    "system_prompt_sha256": "9c6f12ff8d60199d51553891dc23f9f11612fbe491d1a9c68af53bba7c2b9eaa",
+    "judge_prompt": "eval/judge_prompt.md",
+    "judge_prompt_sha256": "0ae38fa1e27c40b03201d8bbdebf15e3ff389389db61f942d5bd35a821b0991d",
+    "trial_count": 65
+  },
+  "cases": 35,
+  "negative_cases": 10,
+  "overall": {
+    "trials": 65,
+    "code_passed": 1,
+    "code_pass_rate": 0.0154,
+    "final_graded": 46,
+    "final_passed": 1,
+    "graded_only_pass_rate": 0.0217,
+    "final_pass_rate": null,
+    "judgement_pending": 19
+  },
+  "ordinary": {
+    "trials": 25,
+    "code_passed": 1,
+    "code_pass_rate": 0.04,
+    "final_graded": 22,
+    "final_passed": 1,
+    "graded_only_pass_rate": 0.0455,
+    "final_pass_rate": null,
+    "judgement_pending": 3
+  },
+  "negative": {
+    "trials": 40,
+    "code_passed": 0,
+    "code_pass_rate": 0.0,
+    "final_graded": 24,
+    "final_passed": 0,
+    "graded_only_pass_rate": 0.0,
+    "final_pass_rate": null,
+    "judgement_pending": 16
+  },
+  "average_turns": 3.692,
+  "total_prompt_tokens": 511396,
+  "total_completion_tokens": 73048,
+  "total_cost_usd": 0.052962
+}
