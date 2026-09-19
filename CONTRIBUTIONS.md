@@ -33,5 +33,5 @@ submission is assembled.
 - Ran and preserved the complete 65-trial DeepSeek Chat D5(b) live-model battery, including pricing/configuration, traces, judged results, summary outputs, and the final submission JSON.
 - Completed the DeepSeek judgement workflow and verified that all pending judgements were resolved.
 - Contributed to the loop-and-tool design discussion, especially the rationale for an agentic loop, dynamic tool selection, and a gated irreversible decision write.
-- Drafted and refined report Section 1, “Why an Agent”, and Section 5, “The Two Failures”.
+- Drafted and refined report.
 - Coordinated report and demo assembly, including integrating the final report, checking A2 requirement alignment, preparing the demo script and slide guidance, and editing the final video.
