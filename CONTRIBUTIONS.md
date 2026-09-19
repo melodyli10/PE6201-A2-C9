@@ -34,3 +34,13 @@ submission is assembled.
 - Contributed to the loop-and-tool design discussion, especially the rationale for an agentic loop, dynamic tool selection, a gated irreversible decision write.
 - Drafted and refined report.
 - Coordinated report and demo assembly, including integrating the final report, checking A2 requirement alignment, preparing the demo script and slide guidance, and editing the final video.
+
+## Aravindh
+
+- Built D1: the single-agent ReAct loop (`src/loop.py`), the scripted and live backends, the seven-tool registry, and the gated decision write with its autonomy check.
+- Built D2(a): justified the seven-tool set by removing each tool in turn and rerunning the evaluation set, and fixed the defect this exposed (the hospital-status result was fetched but never written into the record, so a panel hospital was recorded as non-panel).
+- Built D2(c): defined the dependency rule for which calls may share a turn, implemented parallel execution, and measured sequential against parallel runs on the same cases (39.6% fewer turns and 43.0% fewer input tokens, identical decisions).
+- Contributed five D4 evaluation cases (`CLM-9107` to `CLM-9111`) covering an annual-limit breach by exactly one dollar, both inclusive edges of a pre-authorisation window, an expiry missed by one day, and a claim needing two pre-authorisation lookups; labels were written from the routing table before any agent run.
+- Ran and preserved the D5(b) v1 pass on Mistral Small 3.2 24B (65 trials, judged independently by GPT-4.1 Mini, US$0.052962): only the v1 pre-authorisation tool was exposed, verified by zero v2 calls across all traces, and the system prompt was left unchanged. Result 1/65 (1.54%) against the v2 run's 16/65 on the same model. An earlier attempt that varied the system prompt instead of the tool descriptor was identified as incorrect and replaced.
+- Checked the other teams' live runs for mixed tool versions by counting actual tool calls in their traces (two single-version, one with a single stray v1 call).
+- Evaluated multi-agent and retrieval alternatives as a side experiment outside the graded build (`alt_architecture_multiagent_rag/`, kept local); the comparison and the reasons for not adopting them, or fine-tuning, are written up separately for the report's limits section.
