@@ -1,5 +1,7 @@
 # Contributions
 
+The commit history and the evidence paths in `supporting_documents/` corroborate these contributions.
+
 ## Chai Peiyao
 
 - Contributed six D4 evaluation cases, including the required negative cases.
@@ -13,12 +15,7 @@
 
 - Handled testing and validation for the D2(b)/D3 guardrail work, including the reproducible D3 test runner, test checklist, saved results, and related guardrail and configuration fixes.
 - Prepared the initial D4 evaluation implementation, including the evaluation-related code, evaluation cases, and their associated test data and expected outcomes. The initial work was then handed over to Li Jiakun for further review, refinement, and integration.
-- Ran and preserved the complete 65-trial Gemini 2.5 Pro D5(b) live-model battery, including execution traces, judged results, summary tables, and cross-platform hash verification.
-
-
-The commit history and the evidence paths in `supporting_documents/` corroborate
-these items. Other team members should append their own entries before the team
-submission is assembled.
+- Ran and preserved the complete 65-trial Gemini 2.5 Pro D5(b) live-model battery, including execution traces, judged results, summary tables, and cross-platform hash verification. 
 
 ## Wang Xiyue
 
@@ -43,3 +40,12 @@ submission is assembled.
 - Contributed five D4 evaluation cases (`CLM-9107` to `CLM-9111`) covering an annual-limit breach by exactly one dollar, both inclusive edges of a pre-authorisation window, an expiry missed by one day, and a claim needing two pre-authorisation lookups; labels were written from the routing table before any agent run.
 - Ran and preserved the D5(b) v1 pass on Mistral Small 3.2 24B (65 trials, judged independently by GPT-4.1 Mini, US$0.052962): only the v1 pre-authorisation tool was exposed, verified by zero v2 calls across all traces, and the system prompt was left unchanged. Result 1/65 (1.54%) against the v2 run's 16/65 on the same model. An earlier attempt that varied the system prompt instead of the tool descriptor was identified as incorrect and replaced.
 - Evaluated multi-agent and retrieval alternatives as a side experiment outside the graded build (`alt_architecture_multiagent_rag/`, kept local); the comparison and the reasons for not adopting them, or fine-tuning, are written up separately for the report's limits section.
+
+## Li Jiakun
+
+- Wrote six D4 evaluation cases with matching test data and expected outcomes, including five approval cases and one negative case. The cases cover policy start and end dates, duplicate detection, covered and excluded procedures, and multi-line claims.
+- Reviewed the team's evaluation cases and identified overlapping scenarios. Revised cases and their test data, updated the expected outcomes, and checked that the final set covered different situations rather than repeating the same tests.
+- Took over the initial D4 evaluation work from Zhao Zixuan and improved the evaluation code. Corrected the trial plans for D4 and D5, fixed how results were normalised, updated the tests, and wrote README instructions so the evaluations could be reproduced.
+- Ran and documented the final D4 scripted evaluation: 35 cases tested three times each, giving 105 trials. All 105 trials passed, with no pending judgements. Saved the final results, judgement records and supporting evidence.
+- Added GPT-4.1 Mini pricing and ran the complete 65-trial D5(b) live-model evaluation. Completed the judgement checks and saved the execution traces, graded results and summary outputs.
+- Made the team's presentation slides, wrote Section 3 of the report, reviewed and revised the report, and helped organise the work by assigning tasks to team members.
